@@ -274,14 +274,15 @@
     if (museEl && parent.contains(museEl)) return museEl;
 
     museEl = document.createElement('div');
-    museEl.className = 'neima-muse-companion' + (isCompanionVisible ? '' : ' hidden');
+    museEl.className = 'neima-muse-companion idle-hidden';
     museEl.style.left = `${companionX}px`;
     museEl.style.top = `${companionY}px`;
-    museEl.setAttribute('title', 'Neima Living 3D Muse (Follows cursor • Blinks & Smiles • Drag to move)');
+    museEl.setAttribute('title', 'Neima Living 3D Cyber Companion (Active during tasks • Walks & Clicks • Draggable)');
     museEl.innerHTML = `
       <div class="neima-muse-speech" id="neimaMuseSpeech">Neima Ready</div>
       <div class="neima-muse-floater">
         <div class="neima-muse-rotator" id="neimaRotator">
+          <!-- Head Sphere & Visor -->
           <div class="neima-muse-head-sphere" id="neimaHeadSphere">
             <div class="neima-muse-ring neima-muse-ring-1"></div>
             <div class="neima-muse-ring neima-muse-ring-2"></div>
@@ -321,6 +322,45 @@
                 <circle cx="15" cy="15" r="1.5" fill="rgba(255, 255, 255, 0.6)" />
               </svg>
               <div class="neima-muse-hologram-scan"></div>
+            </div>
+          </div>
+
+          <!-- Cyber-Torso & Glowing Reactor Core -->
+          <div class="neima-muse-body">
+            <div class="neima-muse-chest-armor">
+              <div class="neima-muse-core-reactor"></div>
+            </div>
+
+            <!-- Left Cyber-Arm -->
+            <div class="neima-muse-arm arm-left" id="neimaArmL">
+              <div class="arm-upper"></div>
+              <div class="arm-forearm"></div>
+              <div class="arm-hand">
+                <span class="finger-pointer"></span>
+              </div>
+            </div>
+
+            <!-- Right Cyber-Arm (Reaches & Clicks) -->
+            <div class="neima-muse-arm arm-right" id="neimaArmR">
+              <div class="arm-upper"></div>
+              <div class="arm-forearm"></div>
+              <div class="arm-hand">
+                <span class="finger-pointer"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cyber-Legs for Walking around the Screen -->
+          <div class="neima-muse-legs-container">
+            <div class="neima-muse-leg leg-left" id="neimaLegL">
+              <div class="leg-thigh"></div>
+              <div class="leg-shin"></div>
+              <div class="leg-foot"></div>
+            </div>
+            <div class="neima-muse-leg leg-right" id="neimaLegR">
+              <div class="leg-thigh"></div>
+              <div class="leg-shin"></div>
+              <div class="leg-foot"></div>
             </div>
           </div>
         </div>
@@ -605,50 +645,63 @@
   }
 
   /**
-   * Fly 3D Muse Companion to an Element & Animate
+   * Walk & Click: Animates 3D Cyber Companion to walk to target element, tap with finger, and click
    */
   async function animateMuseToElement(targetEl, speechText, state = 'acting') {
     const muse = ensureMuseCompanion();
     if (!muse) return;
-    muse.classList.remove('hidden', 'happy', 'acting', 'pointing', 'thinking', 'observing', 'warning');
+    muse.classList.remove('hidden', 'idle-hidden', 'happy', 'acting', 'pointing', 'thinking', 'observing', 'warning', 'clicking', 'celebrating');
     muse.classList.add(state);
 
     const rect = targetEl.getBoundingClientRect();
     const targetX = rect.left + rect.width / 2;
     const targetY = rect.top;
 
-    // Smooth viewport flight
-    muse.style.left = `${Math.max(20, Math.min(window.innerWidth - 75, targetX - 26))}px`;
-    muse.style.top = `${Math.max(20, targetY - 80)}px`;
+    const curX = parseFloat(muse.style.left) || companionX;
+    const dx = targetX - curX;
 
-    if (speechText) {
-      showMuseSpeech(speechText, 3500);
+    // Face in direction of walking
+    if (dx < -15) {
+      muse.classList.add('facing-left');
+    } else if (dx > 15) {
+      muse.classList.remove('facing-left');
     }
 
-    // Activate laser pointer beam towards element
-    setTimeout(() => {
-      muse.classList.add('pointing');
-    }, 240);
+    // Step 1: Start walking stride!
+    muse.classList.add('walking');
 
-    await sleep(450);
+    const destX = Math.max(15, Math.min(window.innerWidth - 75, targetX - 32));
+    const destY = Math.max(15, targetY - 78);
+    muse.style.left = `${destX}px`;
+    muse.style.top = `${destY}px`;
+
+    if (speechText) {
+      showMuseSpeech(speechText, 2500);
+    }
+
+    // Fast walking transit: 180ms
+    await sleep(180);
+
+    // Step 2: Arrived at element -> Stop walking, extend arm and click!
+    muse.classList.remove('walking');
+    muse.classList.add('clicking');
+
+    // Laser/finger pulse
+    muse.classList.add('pointing');
+
+    // Fast click tap duration: 120ms
+    await sleep(120);
+    muse.classList.remove('pointing', 'clicking');
   }
 
   function returnCompanionToRest() {
     if (!museEl) return;
-    museEl.classList.remove('pointing', 'acting', 'thinking', 'observing', 'warning');
-    museEl.classList.add('happy');
-    setCompanionMood('happy');
+    museEl.classList.remove('pointing', 'acting', 'thinking', 'observing', 'warning', 'walking', 'clicking');
+    setCompanionMood('idle');
 
-    // Smooth return to resting anchor
-    setTimeout(() => {
-      if (museEl && isCompanionVisible) {
-        museEl.classList.remove('happy');
-        setCompanionMood('idle');
-        museEl.style.left = `${companionX}px`;
-        museEl.style.top = `${companionY}px`;
-        museEl.style.transform = '';
-      }
-    }, 900);
+    // Auto-hide off-screen when resting/idle so it does NOT block the user's view
+    museEl.classList.add('idle-hidden');
+    museEl.style.transform = '';
   }
 
   function hideMuseCompanion() {
@@ -657,41 +710,52 @@
 
   function syncMuseState(status, text) {
     const muse = ensureMuseCompanion();
-    if (!muse || !isCompanionVisible) return;
+    if (!muse) return;
 
-    muse.classList.remove('hidden', 'pointing', 'acting', 'thinking', 'observing', 'warning', 'happy');
+    muse.classList.remove('pointing', 'acting', 'thinking', 'observing', 'warning', 'happy', 'walking', 'clicking', 'celebrating');
 
     switch (status) {
       case 'OBSERVING':
-        muse.classList.add('observing');
+      case 'RUNNING':
+        // Active task started -> Wake up & become visible!
+        muse.classList.remove('hidden', 'idle-hidden');
+        muse.classList.add('observing', 'walking');
         setCompanionMood('happy');
-        // Drift smoothly toward center top
-        muse.style.left = `${Math.max(30, window.innerWidth / 2 - 26)}px`;
-        muse.style.top = `60px`;
-        showMuseSpeech(text || 'Observing page layout...', 2500);
+        // Walk smoothly toward center top
+        muse.style.left = `${Math.max(30, window.innerWidth / 2 - 32)}px`;
+        muse.style.top = `40px`;
+        showMuseSpeech(text || 'Observing page...', 2200);
+        setTimeout(() => muse?.classList.remove('walking'), 220);
         break;
 
       case 'THINKING':
+        muse.classList.remove('hidden', 'idle-hidden');
         muse.classList.add('thinking');
         setCompanionMood('thinking');
-        showMuseSpeech(text || 'Thinking with AI model...', 3000);
+        showMuseSpeech(text || 'Thinking with AI...', 2500);
         break;
 
       case 'WAITING_CONFIRMATION':
+        muse.classList.remove('hidden', 'idle-hidden');
         muse.classList.add('warning');
         setCompanionMood('idle');
         showMuseSpeech(text || 'Awaiting your authorization...', 4000);
         break;
 
       case 'COMPLETED':
-        muse.classList.add('happy');
+        muse.classList.remove('hidden', 'idle-hidden');
+        muse.classList.add('happy', 'celebrating');
         setCompanionMood('happy');
-        showMuseSpeech(text || 'Task complete', 3000);
-        setTimeout(() => returnCompanionToRest(), 1400);
+        showMuseSpeech(text || 'Task complete! ✨', 2000);
+        // After brief victory celebration, smoothly retreat and hide!
+        setTimeout(() => {
+          returnCompanionToRest();
+        }, 1400);
         break;
 
       case 'IDLE':
       default:
+        // Automatically hide from screen when idle
         returnCompanionToRest();
         break;
     }
@@ -702,12 +766,16 @@
     const muse = ensureMuseCompanion();
     if (!muse) return;
     if (isCompanionVisible) {
-      muse.classList.remove('hidden');
-      returnCompanionToRest();
-      startAmbientRoaming();
-      showMuseSpeech('Neima online!', 2000);
+      muse.classList.remove('hidden', 'idle-hidden');
+      setCompanionMood('happy');
+      showMuseSpeech('Neima ready for tasks!', 1800);
+      setTimeout(() => {
+        if (!muse.classList.contains('observing') && !muse.classList.contains('acting') && !muse.classList.contains('thinking')) {
+          returnCompanionToRest();
+        }
+      }, 2000);
     } else {
-      muse.classList.add('hidden');
+      muse.classList.add('hidden', 'idle-hidden');
       clearInterval(ambientRoamTimer);
       if (museEl) museEl.style.transform = '';
     }
@@ -874,9 +942,9 @@
       case 'click': {
         if (!targetEl) return { error: `Element [${elementId || selector}] not found` };
         targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        await sleep(250);
+        await sleep(70);
 
-        // Fly 3D Muse to element
+        // Walk 3D Companion to element and tap with finger
         await animateMuseToElement(targetEl, `Clicking [${elementId || selector}]`);
 
         // Highlight and spawn 3D energy ripple
@@ -895,16 +963,15 @@
         targetEl.dispatchEvent(new MouseEvent('mouseup', eventOpts));
         targetEl.click();
 
-        hideMuseCompanion();
         return { success: true, message: `Clicked element [${elementId || selector}]` };
       }
 
       case 'type': {
         if (!targetEl) return { error: `Input element [${elementId || selector}] not found` };
         targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        await sleep(200);
+        await sleep(70);
 
-        // Fly 3D Muse to element
+        // Walk 3D Companion to element
         await animateMuseToElement(targetEl, `Typing "${value}"`);
 
         highlightElement(targetEl);
@@ -919,7 +986,6 @@
           targetEl.dispatchEvent(new Event('input', { bubbles: true }));
         }
 
-        hideMuseCompanion();
         return { success: true, message: `Typed "${value}" into element [${elementId || selector}]` };
       }
 

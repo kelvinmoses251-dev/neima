@@ -27,54 +27,26 @@
    NEIMA: REFINED MINIMALIST SPATIAL COMPANION
    ========================================================================== */
 
-.neima-muse-companion {
-  position: fixed !important;
-  width: 52px !important;
-  height: 64px !important;
-  pointer-events: auto !important;
-  cursor: grab !important;
-  z-index: 2147483647 !important;
-  transform-style: preserve-3d !important;
-  perspective: 600px !important;
-  transition: left 0.45s cubic-bezier(0.16, 1, 0.3, 1), top 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.6)) !important;
-  user-select: none !important;
-}
-
-.neima-muse-companion:active,
-.neima-muse-companion.dragging {
-  cursor: grabbing !important;
-  transition: none !important;
-}
-
-.neima-muse-companion.hidden {
-  opacity: 0 !important;
-  pointer-events: none !important;
-  transform: scale(0.7) translateY(20px) !important;
-}
-
 /* ==========================================================================
-   NEIMA: LIVING 3D COMPANION (BLINKING, EYE TRACKING, HEAD TURNING, SMILING)
+   NEIMA: AUTONOMOUS 3D CYBER COMPANION (HUMANOID CHASSIS WITH ARMS & LEGS)
    ========================================================================== */
 
 .neima-muse-companion {
   position: fixed !important;
-  width: 58px !important;
-  height: 68px !important;
+  width: 64px !important;
+  height: 96px !important;
   pointer-events: auto !important;
   cursor: grab !important;
   z-index: 2147483647 !important;
   perspective: 700px !important;
   transform-style: preserve-3d !important;
-  transition: left 0.45s cubic-bezier(0.16, 1, 0.3, 1), top 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
+  transition: left 0.22s cubic-bezier(0.2, 0.9, 0.3, 1), top 0.22s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.65)) !important;
   user-select: none !important;
+  opacity: 1 !important;
 }
 
 .neima-muse-companion:active,
@@ -83,10 +55,16 @@
   transition: none !important;
 }
 
-.neima-muse-companion.hidden {
+/* Auto-Hide when not on active task / research / project */
+.neima-muse-companion.hidden,
+.neima-muse-companion.idle-hidden {
   opacity: 0 !important;
   pointer-events: none !important;
-  transform: scale(0.7) translateY(20px) !important;
+  transform: scale(0.65) translateY(32px) !important;
+}
+
+.neima-muse-companion.facing-left .neima-muse-rotator {
+  transform: scaleX(-1) !important;
 }
 
 /* Organic Floating & Breathing Bob */
@@ -293,6 +271,240 @@
 .neima-muse-companion.pointing .neima-muse-beam {
   opacity: 1 !important;
   height: 38px !important;
+}
+
+/* ==========================================================================
+   NEIMA HUMANOID CYBER CHASSIS: TORSO, ARMS & LEGS
+   ========================================================================== */
+
+/* Torso & Core Reactor */
+.neima-muse-body {
+  position: relative !important;
+  width: 28px !important;
+  height: 22px !important;
+  margin-top: -4px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  z-index: 3 !important;
+  transform-style: preserve-3d !important;
+}
+
+.neima-muse-chest-armor {
+  width: 24px !important;
+  height: 20px !important;
+  background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%) !important;
+  border: 1.2px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 6px 6px 9px 9px !important;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.35), 0 3px 8px rgba(0, 0, 0, 0.7) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+.neima-muse-core-reactor {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background: #38bdf8 !important;
+  box-shadow: 0 0 10px #38bdf8, 0 0 3px #ffffff !important;
+  animation: neima-reactor-glow 2s ease-in-out infinite alternate !important;
+}
+
+@keyframes neima-reactor-glow {
+  0% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 6px #38bdf8; }
+  100% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 14px #38bdf8, 0 0 5px #ffffff; }
+}
+
+/* Cyber-Arms */
+.neima-muse-arm {
+  position: absolute !important;
+  top: 1px !important;
+  width: 7px !important;
+  height: 24px !important;
+  transform-origin: top center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  z-index: 4 !important;
+  transition: transform 0.16s cubic-bezier(0.2, 0.9, 0.3, 1) !important;
+}
+
+.neima-muse-arm.arm-left {
+  left: -8px !important;
+  transform: rotate(8deg);
+}
+
+.neima-muse-arm.arm-right {
+  right: -8px !important;
+  transform: rotate(-8deg);
+}
+
+.arm-upper {
+  width: 6px !important;
+  height: 10px !important;
+  background: linear-gradient(180deg, #334155, #1e293b) !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  border-radius: 3px !important;
+}
+
+.arm-forearm {
+  width: 5px !important;
+  height: 9px !important;
+  background: linear-gradient(180deg, #1e293b, #0f172a) !important;
+  border: 1px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 2px !important;
+  margin-top: -1px !important;
+}
+
+.arm-hand {
+  width: 6px !important;
+  height: 5px !important;
+  background: #38bdf8 !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.8) !important;
+  position: relative !important;
+  margin-top: -1px !important;
+}
+
+.finger-pointer {
+  position: absolute !important;
+  bottom: -3px !important;
+  left: 2px !important;
+  width: 2px !important;
+  height: 4px !important;
+  background: #ffffff !important;
+  border-radius: 1px !important;
+  box-shadow: 0 0 4px #38bdf8 !important;
+}
+
+/* Cyber-Legs Container */
+.neima-muse-legs-container {
+  position: relative !important;
+  width: 22px !important;
+  height: 25px !important;
+  margin-top: -2px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  z-index: 2 !important;
+}
+
+.neima-muse-leg {
+  width: 7px !important;
+  height: 24px !important;
+  transform-origin: top center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  transition: transform 0.16s cubic-bezier(0.2, 0.9, 0.3, 1) !important;
+}
+
+.leg-thigh {
+  width: 6px !important;
+  height: 10px !important;
+  background: linear-gradient(180deg, #334155, #1e293b) !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  border-radius: 3px !important;
+}
+
+.leg-shin {
+  width: 5px !important;
+  height: 9px !important;
+  background: linear-gradient(180deg, #1e293b, #0f172a) !important;
+  border: 1px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 2px !important;
+  margin-top: -1px !important;
+}
+
+.leg-foot {
+  width: 9px !important;
+  height: 4px !important;
+  background: #38bdf8 !important;
+  border-radius: 2px 4px 2px 2px !important;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.9) !important;
+  margin-left: 2px !important;
+  margin-top: -1px !important;
+}
+
+/* ==========================================================================
+   DYNAMIC HUMAN-LIKE ACTIONS: WALKING, CLICKING & CELEBRATING
+   ========================================================================== */
+
+/* Active Walking Animations */
+.neima-muse-companion.walking .arm-left {
+  animation: neima-walk-arm-left 0.32s ease-in-out infinite alternate !important;
+}
+
+.neima-muse-companion.walking .arm-right {
+  animation: neima-walk-arm-right 0.32s ease-in-out infinite alternate !important;
+}
+
+.neima-muse-companion.walking .leg-left {
+  animation: neima-walk-leg-left 0.32s ease-in-out infinite alternate !important;
+}
+
+.neima-muse-companion.walking .leg-right {
+  animation: neima-walk-leg-right 0.32s ease-in-out infinite alternate !important;
+}
+
+.neima-muse-companion.walking .neima-muse-floater {
+  animation: neima-walk-body-bob 0.16s ease-in-out infinite alternate !important;
+}
+
+@keyframes neima-walk-leg-left {
+  0% { transform: rotate(-28deg) translateY(-1px); }
+  100% { transform: rotate(26deg) translateY(2px); }
+}
+
+@keyframes neima-walk-leg-right {
+  0% { transform: rotate(26deg) translateY(2px); }
+  100% { transform: rotate(-28deg) translateY(-1px); }
+}
+
+@keyframes neima-walk-arm-left {
+  0% { transform: rotate(28deg); }
+  100% { transform: rotate(-24deg); }
+}
+
+@keyframes neima-walk-arm-right {
+  0% { transform: rotate(-24deg); }
+  100% { transform: rotate(28deg); }
+}
+
+@keyframes neima-walk-body-bob {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-3px); }
+}
+
+/* Active Clicking Finger-Tap Animation */
+.neima-muse-companion.clicking .arm-right {
+  animation: neima-arm-tap 0.28s cubic-bezier(0.1, 0.9, 0.2, 1) forwards !important;
+}
+
+@keyframes neima-arm-tap {
+  0% { transform: rotate(0deg) scale(1); }
+  45% { transform: rotate(-85deg) translateZ(8px) scale(1.15); }
+  75% { transform: rotate(-72deg) translateZ(12px) scale(1.2); }
+  100% { transform: rotate(-10deg) scale(1); }
+}
+
+/* Victory / Celebrating Pose */
+.neima-muse-companion.celebrating .arm-left {
+  transform: rotate(-135deg) translateY(-2px) !important;
+}
+
+.neima-muse-companion.celebrating .arm-right {
+  transform: rotate(135deg) translateY(-2px) !important;
+}
+
+.neima-muse-companion.celebrating .neima-muse-floater {
+  animation: neima-celebrate-jump 0.35s ease-in-out infinite alternate !important;
+}
+
+@keyframes neima-celebrate-jump {
+  0% { transform: translateY(0px) scale(1); }
+  100% { transform: translateY(-8px) scale(1.08); }
 }
 
 /* Clean Matte Action Toast / Speech */
