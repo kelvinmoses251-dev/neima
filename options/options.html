@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neima Settings</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../icons/icon-16.png">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body class="theme-dark">
+  <div class="settings-container">
+    <header class="settings-header">
+      <div class="brand">
+        <div class="logo-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="4"></circle>
+            <line x1="12" y1="2" x2="12" y2="4"></line>
+            <line x1="12" y1="20" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="4" y2="12"></line>
+            <line x1="20" y1="12" x2="22" y2="12"></line>
+          </svg>
+        </div>
+        <div>
+          <h1>Neima Settings</h1>
+          <p>Configure model API keys, agent autonomy limits, and smart persona profiles.</p>
+        </div>
+      </div>
+      <button id="saveBtn" class="btn btn-primary">Save Changes</button>
+    </header>
+
+    <div id="saveToast" class="save-toast hidden">Settings saved successfully.</div>
+
+    <main class="settings-grid">
+      <!-- Section 1: AI Provider Keys -->
+      <section class="settings-card">
+        <div class="card-title">
+          <h2>AI Providers & API Keys</h2>
+          <span class="badge">Multi-Model</span>
+        </div>
+        <p class="card-desc">Keys are stored securely in local extension storage (`chrome.storage.local`) and never sent to external telemetry servers.</p>
+
+        <div class="form-group">
+          <label for="geminiKey">Google Gemini API Key</label>
+          <div class="input-with-icon">
+            <input type="password" id="geminiKey" placeholder="AIzaSy...">
+            <button type="button" class="toggle-visibility" data-target="geminiKey" title="Toggle visibility">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+          <span class="field-hint">Enables Gemini 3.8 Flash (High), Argon 4, Gemini 2.5 Pro, and Gemini 2.0 Flash.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="anthropicKey">Anthropic API Key</label>
+          <div class="input-with-icon">
+            <input type="password" id="anthropicKey" placeholder="sk-ant-api03-...">
+            <button type="button" class="toggle-visibility" data-target="anthropicKey" title="Toggle visibility">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+          <span class="field-hint">Enables Claude 3.7 Sonnet, 3.5 Sonnet, and Haiku.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="openaiKey">OpenAI API Key</label>
+          <div class="input-with-icon">
+            <input type="password" id="openaiKey" placeholder="sk-proj-...">
+            <button type="button" class="toggle-visibility" data-target="openaiKey" title="Toggle visibility">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+          <span class="field-hint">Enables GPT-4o and GPT-4o-mini.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="ollamaUrl">Local Ollama URL (Offline)</label>
+          <input type="text" id="ollamaUrl" placeholder="http://localhost:11434">
+          <span class="field-hint">Connects to your local Ollama instance (DeepSeek, Llama 3.2, Qwen).</span>
+        </div>
+      </section>
+
+      <!-- Section 2: Agent Execution Configuration -->
+      <section class="settings-card">
+        <div class="card-title">
+          <h2>Execution & Safety</h2>
+          <span class="badge">Autonomy</span>
+        </div>
+        <p class="card-desc">Configure pacing and confirmation behaviors when Neima executes actions across web pages.</p>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="autoConfirm">
+            <div class="checkbox-text">
+              <strong>Autonomous Execution (Auto-pilot)</strong>
+              <p>Execute routine steps (navigation, scrolling, searches, clicks) continuously without pausing for manual approval.</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="requireSensitiveApproval" checked>
+            <div class="checkbox-text">
+              <strong>Require Approval for Sensitive Information (Recommended)</strong>
+              <p>Always pause and prompt for explicit user confirmation before submitting payments, typing credit card or password details, or triggering account deletion.</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="stepDelay">Step Execution Delay (<span id="delayVal">180</span>ms)</label>
+          <input type="range" id="stepDelay" min="100" max="2500" step="50" value="180">
+          <span class="field-hint">Ultra-fast 180ms execution speed for instant Claude-parity responsiveness.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="maxSteps">Maximum Steps Per Task</label>
+          <input type="number" id="maxSteps" min="3" max="50" value="15">
+          <span class="field-hint">Safety cap to prevent endless loops on complex dynamic applications.</span>
+        </div>
+      </section>
+
+      <!-- Section 3: Smart Form Fill Persona -->
+      <section class="settings-card wide">
+        <div class="card-title">
+          <h2>Autofill Profile</h2>
+          <span class="badge">Persona</span>
+        </div>
+        <p class="card-desc">Used by the Autofill tool to populate registration, checkout, or contact forms.</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="profileFullName">Full Name</label>
+            <input type="text" id="profileFullName" placeholder="Alex Morgan">
+          </div>
+          <div class="form-group">
+            <label for="profileEmail">Email Address</label>
+            <input type="email" id="profileEmail" placeholder="alex.morgan@example.com">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="profilePhone">Phone Number</label>
+            <input type="tel" id="profilePhone" placeholder="+1 (555) 234-5678">
+          </div>
+          <div class="form-group">
+            <label for="profileCompany">Company / Org</label>
+            <input type="text" id="profileCompany" placeholder="TechFlow Dynamics">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="profileJobTitle">Job Title</label>
+            <input type="text" id="profileJobTitle" placeholder="Senior Software Architect">
+          </div>
+          <div class="form-group">
+            <label for="profileAddress">Street Address</label>
+            <input type="text" id="profileAddress" placeholder="742 Evergreen Terrace">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="profileZip">Postal / Zip Code</label>
+            <input type="text" id="profileZip" placeholder="97477">
+          </div>
+          <div class="form-group">
+            <label for="profileCountry">Country</label>
+            <input type="text" id="profileCountry" placeholder="United States">
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

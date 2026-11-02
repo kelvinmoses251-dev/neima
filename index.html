@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neima — AI Autonomous Browser Agent & 3D Muse Companion</title>
+  <meta name="description" content="Next-generation autonomous AI browser agent featuring an interactive 3D Muse companion, vision, live DOM automation, Set-of-Marks indexing, and multi-model intelligence.">
+  <link rel="icon" type="image/png" href="icons/icon-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-dark">
+  <!-- Glowing Ambient Mesh Background -->
+  <div class="mesh-background" aria-hidden="true">
+    <div class="glow-orb orb-primary"></div>
+    <div class="glow-orb orb-secondary"></div>
+    <div class="glow-orb orb-tertiary"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Global Navigation -->
+  <header class="navbar" id="topNav">
+    <div class="nav-container">
+      <a href="#hero" class="brand-link">
+        <div class="avatar-ring">
+          <img src="assets/avatar-neima.jpg" alt="Neima 3D Muse" class="nav-avatar">
+          <span class="status-pulse" title="Neima Online"></span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">Neima</span>
+          <span class="brand-tag">Autonomous Agent</span>
+        </div>
+      </a>
+
+      <nav class="nav-menu" aria-label="Main Navigation">
+        <a href="#simulator" class="nav-link">Live Simulator</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#comparison" class="nav-link">Comparison</a>
+        <a href="#models" class="nav-link">Models</a>
+        <a href="#install" class="nav-link">Install Guide</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="openSimTopBtn" class="btn btn-ghost">
+          <span>Test Drive</span>
+          <span class="kbd-badge">Demo</span>
+        </button>
+        <button id="installCtaNavBtn" class="btn btn-primary glow-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Add to Chrome</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Global Autonomous Telemetry Banner -->
+  <div class="live-telemetry-banner" id="telemetryBanner">
+    <div class="telemetry-banner-content">
+      <div class="live-status-group">
+        <span class="live-blip"></span>
+        <span class="live-badge-txt">LIVE NETWORK TELEMETRY</span>
+      </div>
+      <div class="telemetry-stat-item">
+        <span class="stat-num" id="liveTaskCounter">52,894</span>
+        <span class="stat-name">Tasks Automated Today</span>
+      </div>
+      <div class="telemetry-stat-item">
+        <span class="stat-num accent-cyan">98.4ms</span>
+        <span class="stat-name">Gemini 3.8 Flash Latency</span>
+      </div>
+      <div class="telemetry-stat-item">
+        <span class="stat-num accent-green">99.8%</span>
+        <span class="stat-name">SoM Precision Rate</span>
+      </div>
+      <div class="telemetry-live-ticker" id="telemetryTicker">
+        <span class="ticker-pulse">✦</span>
+        <span class="ticker-text" id="liveActivityFeed">Developer in Berlin automated AWS Cloud deployment review (2s ago)</span>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero">
+      <div class="hero-container">
+        <div class="hero-content">
+          <div class="announcement-pill" id="announcementPill">
+            <span class="pill-dot"></span>
+            <span class="pill-highlight">Next-Gen v1.0 Released</span>
+            <span class="pill-divider">•</span>
+            <span>Featuring 3D Spatial Muse & Gemini 3.8</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+
+          <h1 class="hero-headline">
+            The Autonomous Browser Agent Guided by an In-Page <span class="gradient-text">3D Muse.</span>
+          </h1>
+
+          <p class="hero-subhead">
+            Experience spatial browser intelligence. Neima floats directly inside live web pages, shoots precision laser beams at interactive elements, automates clicks and forms with Set-of-Marks visual indexing, and runs 100% privately on your machine.
+          </p>
+
+          <!-- Hero Autonomous Mission Deck (Instant Conversion Launcher) -->
+          <div class="hero-mission-deck glass-panel" id="heroMissionDeck">
+            <div class="mission-deck-header">
+              <div class="deck-indicator">
+                <span class="deck-pulse"></span>
+                <span class="deck-title">INSTANT AUTONOMOUS MISSION LAUNCHER</span>
+              </div>
+              <span class="deck-tag">Real-Time In-Page Execution</span>
+            </div>
+            <div class="mission-input-row">
+              <div class="mission-input-wrapper">
+                <span class="mission-prompt-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
+                <input type="text" id="heroMissionInput" placeholder="Tell Neima what to automate (e.g. Find cheapest flight to Tokyo, extract table to CSV)..." value="Find lowest roundtrip flight to Tokyo under $650 & extract price matrix">
+              </div>
+              <button class="btn btn-primary mission-execute-btn" id="heroMissionBtn">
+                <span>Launch Mission</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+            <div class="mission-quick-chips">
+              <span class="quick-chip-label">Quick Missions:</span>
+              <button class="mission-chip active" data-mission="flight">✈️ Tokyo Flights</button>
+              <button class="mission-chip" data-mission="scrape">📊 Amazon Price Table</button>
+              <button class="mission-chip" data-mission="autofill">⚡ Smart Checkout</button>
+              <button class="mission-chip" data-mission="audit">🛡️ Security Audit</button>
+              <button class="mission-chip" data-mission="upwork">💼 Research Upwork</button>
+            </div>
+          </div>
+
+          <div class="hero-cta-group">
+            <button id="heroInstallBtn" class="btn btn-large btn-primary glow-button">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="4"></circle>
+                <line x1="21.17" y1="8" x2="12" y2="8"></line>
+                <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+                <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+              </svg>
+              <span>Install Chrome Extension</span>
+              <span class="btn-micro-badge">Free</span>
+            </button>
+
+            <button id="heroPlayBtn" class="btn btn-large btn-glass">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>Try Live Simulator</span>
+            </button>
+          </div>
+
+          <!-- Social Proof & Trust Strip -->
+          <div class="trust-strip">
+            <div class="trust-item">
+              <div class="stars">★★★★★</div>
+              <span class="trust-label">5.0 Star Architecture</span>
+            </div>
+            <div class="trust-divider"></div>
+            <div class="trust-item">
+              <span class="trust-metric">100%</span>
+              <span class="trust-label">Local & Private (BYOK)</span>
+            </div>
+            <div class="trust-divider"></div>
+            <div class="trust-item">
+              <span class="trust-metric">Zero</span>
+              <span class="trust-label">External Telemetry</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive 3D Holographic Muse Showcase Canvas -->
+        <div class="hero-visual-stage" id="museHeroStage">
+          <div class="interactive-muse-card glass-panel" id="interactiveMuseCard">
+            <div class="stage-header">
+              <div class="traffic-lights">
+                <span class="t-light t-red"></span>
+                <span class="t-light t-yellow"></span>
+                <span class="t-light t-green"></span>
+              </div>
+              <span class="stage-title">NEIMA-CORE // 3D SPATIAL TELEMETRY</span>
+              <span class="stage-chip" id="museCurrentMood">ACTIVE • HOVERING</span>
+            </div>
+
+            <div class="stage-viewport" id="museViewport">
+              <!-- Background Grid & Visual Laser Canvas -->
+              <canvas id="laserCanvas" class="laser-canvas"></canvas>
+
+              <!-- Embedded 3D Living OLED Mascot Element -->
+              <div class="spatial-muse-wrapper" id="spatialMuse">
+                <div class="muse-orbit ring-outer"></div>
+                <div class="muse-orbit ring-mid"></div>
+                <div class="muse-orbit ring-inner"></div>
+                
+                <div class="muse-core-sphere" id="museSphere">
+                  <div class="neima-muse-rotator" id="heroMuseRotator">
+                    <div class="neima-muse-head-sphere" id="heroHeadSphere">
+                      <div class="neima-muse-visor-dome">
+                        <svg class="neima-face-svg" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+                          <defs>
+                            <filter id="heroCyberGlow" x="-50%" y="-50%" width="200%" height="200%">
+                              <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="blur" />
+                              <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                              </feMerge>
+                            </filter>
+                          </defs>
+
+                          <!-- OLED Dark Visor Screen -->
+                          <rect x="7" y="9" width="38" height="34" rx="17" fill="#040813" stroke="rgba(56, 189, 248, 0.45)" stroke-width="1.2" />
+
+                          <!-- Moving Eye Gaze & Mouth Group -->
+                          <g id="heroFaceGaze" class="neima-face-gaze">
+                            <!-- Left Eye -->
+                            <g id="heroEyeL" class="neima-eye" transform="translate(18, 22)">
+                              <path class="eye-shape" d="M -5 3 L 0 -3 L 5 3" fill="none" stroke="#00f0ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" filter="url(#heroCyberGlow)" />
+                            </g>
+
+                            <!-- Right Eye -->
+                            <g id="heroEyeR" class="neima-eye" transform="translate(34, 22)">
+                              <path class="eye-shape" d="M -5 3 L 0 -3 L 5 3" fill="none" stroke="#00f0ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" filter="url(#heroCyberGlow)" />
+                            </g>
+
+                            <!-- Animated Glowing Smile -->
+                            <path id="heroMouth" class="neima-mouth" d="M 21 32 Q 26 36 31 32" fill="none" stroke="#00f0ff" stroke-width="2.2" stroke-linecap="round" filter="url(#heroCyberGlow)" />
+                          </g>
+
+                          <!-- Specular Highlight Arc -->
+                          <path d="M 12 16 A 14 14 0 0 1 40 16" fill="none" stroke="rgba(255, 255, 255, 0.45)" stroke-width="1.6" stroke-linecap="round" />
+                          <circle cx="15" cy="15" r="1.5" fill="rgba(255, 255, 255, 0.6)" />
+                        </svg>
+                        <div class="neima-muse-hologram-scan"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="laser-emitter-node" id="emitterNode"></div>
+                </div>
+
+                <!-- Floating Holographic Speech Bubble -->
+                <div class="muse-speech-bubble" id="museSpeechBubble">
+                  <span class="bubble-spark">✦</span>
+                  <span class="bubble-text" id="bubbleText">Neima ready. Launch any mission or hover interactive nodes!</span>
+                </div>
+              </div>
+
+              <!-- Hero Live Mission Telemetry HUD -->
+              <div class="hero-mission-hud hidden" id="heroMissionHud">
+                <div class="hud-top">
+                  <div class="hud-status-badge">
+                    <span class="hud-dot"></span>
+                    <span id="hudStatusText">MISSION ACTIVE</span>
+                  </div>
+                  <span class="hud-time font-mono" id="hudTimer">00:01.2</span>
+                </div>
+                <div class="hud-stream" id="hudStream">
+                  <!-- Real-time action steps -->
+                </div>
+                <div class="hud-result-pill hidden" id="hudResultPill">
+                  <span class="hud-result-icon">✓</span>
+                  <span id="hudResultText">Deliverable Indexed</span>
+                  <button class="hud-view-btn" id="hudViewBtn">Inspect Data</button>
+                </div>
+              </div>
+
+              <!-- Interactive Interactive Targets for Laser Demonstrations -->
+              <div class="interactive-nodes-layer">
+                <button class="target-node" id="nodeSearch" data-label="Search Engine" data-action="Scanning search index...">
+                  <span class="node-badge">[1]</span>
+                  <span>Input: Flight Query</span>
+                </button>
+                <button class="target-node" id="nodeBook" data-label="Checkout Button" data-action="Clicking confirmed action...">
+                  <span class="node-badge">[2]</span>
+                  <span>Button: Confirm Flight</span>
+                </button>
+                <button class="target-node" id="nodeTable" data-label="Dataset Table" data-action="Extracting pricing table...">
+                  <span class="node-badge">[3]</span>
+                  <span>Table: Price Matrix</span>
+                </button>
+              </div>
+
+              <div class="stage-hint">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                </svg>
+                <span>Move cursor to guide Neima's laser pointer • Click any target to trigger autonomy</span>
+              </div>
+            </div>
+
+            <div class="stage-footer">
+              <div class="telemetry-item">
+                <span class="t-dim">TARGET LOCK:</span>
+                <span class="t-val" id="targetLockStatus">Awaiting User Focus</span>
+              </div>
+              <div class="telemetry-item">
+                <span class="t-dim">COORDINATES:</span>
+                <span class="t-val font-mono" id="targetCoords">X: 520px | Y: 240px</span>
+              </div>
+              <div class="telemetry-item">
+                <span class="t-dim">ENGINE:</span>
+                <span class="t-val accent-cyan">Set-of-Marks v3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Live In-Browser Agent Simulator (The Conversion Engine) -->
+    <section class="simulator-section" id="simulator">
+      <div class="section-container">
+        <div class="section-badge">INTERACTIVE PLAYGROUND</div>
+        <h2 class="section-heading">Test Drive Neima Live Right Now</h2>
+        <p class="section-subhead">
+          Zero installation required to see the magic. Run autonomous agent recipes inside this live sandboxed browser environment and watch Neima observe, reason, and act.
+        </p>
+
+        <!-- Playground Recipes Tabs -->
+        <div class="recipe-chips-strip">
+          <button class="recipe-pill active" data-recipe="flight">
+            <span class="pill-icon">✈️</span>
+            <span>Flight Deal Hunter</span>
+          </button>
+          <button class="recipe-pill" data-recipe="table">
+            <span class="pill-icon">📊</span>
+            <span>Extract Amazon Table</span>
+          </button>
+          <button class="recipe-pill" data-recipe="autofill">
+            <span class="pill-icon">📝</span>
+            <span>Smart Checkout Autofill</span>
+          </button>
+          <button class="recipe-pill" data-recipe="debug">
+            <span class="pill-icon">🐞</span>
+            <span>DevTools JS Error Trap</span>
+          </button>
+        </div>
+
+        <!-- Simulated Browser Environment -->
+        <div class="sim-browser-window glass-panel">
+          <!-- Browser Titlebar & Tabs -->
+          <div class="sim-browser-topbar">
+            <div class="browser-controls">
+              <span class="dot dot-close"></span>
+              <span class="dot dot-min"></span>
+              <span class="dot dot-max"></span>
+            </div>
+            
+            <div class="browser-tabs">
+              <div class="browser-tab active" id="simActiveTab">
+                <span class="tab-icon">🌐</span>
+                <span class="tab-title" id="simTabTitle">Google Flights & Travel Hub</span>
+                <span class="tab-close">×</span>
+              </div>
+              <div class="browser-tab dim">
+                <span class="tab-icon">🛒</span>
+                <span class="tab-title">TechSpecs Comparison</span>
+              </div>
+            </div>
+
+            <div class="model-status-chip">
+              <span class="pulse-dot"></span>
+              <span id="simActiveModel">Gemini 3.8 Flash // 118ms</span>
+            </div>
+          </div>
+
+          <!-- Browser Address & Action Bar -->
+          <div class="sim-browser-addressbar">
+            <div class="nav-buttons">
+              <button class="sim-icon-btn" title="Back">←</button>
+              <button class="sim-icon-btn" title="Forward">→</button>
+              <button class="sim-icon-btn" title="Refresh">↻</button>
+            </div>
+            <div class="url-bar">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span class="url-text" id="simUrlText">https://flights.google.com/search?q=SFO+to+Tokyo</span>
+            </div>
+            <div class="addressbar-badges">
+              <span class="badge-som">SoM Badges: ON</span>
+              <span class="badge-vision">Vision: Active</span>
+            </div>
+          </div>
+
+          <!-- Split Workspace: Simulated Web Page + Neima Sidepanel Agent -->
+          <div class="sim-split-layout">
+            <!-- Left: Simulated Web Page Canvas with Dynamic In-Page Muse -->
+            <div class="sim-web-viewport" id="simWebViewport">
+              <div class="sim-web-content" id="simWebContent">
+                <!-- Dynamically injected based on recipe -->
+              </div>
+
+              <!-- In-Page Muse Avatar Inside Simulator -->
+              <div class="sim-inpage-muse" id="simInpageMuse">
+                <div class="sim-muse-body">
+                  <div class="sim-ring ring-1"></div>
+                  <div class="sim-ring ring-2"></div>
+                  <div class="sim-visor">
+                    <span class="sim-eye left"></span>
+                    <span class="sim-eye right"></span>
+                  </div>
+                </div>
+                <div class="sim-muse-speech" id="simMuseSpeech">
+                  Thinking...
+                </div>
+                <div class="sim-laser-beam" id="simLaserBeam"></div>
+              </div>
+            </div>
+
+            <!-- Right: Neima Agent Sidepanel Control Stream -->
+            <div class="sim-agent-sidepanel">
+              <div class="agent-panel-header">
+                <div class="agent-header-brand">
+                  <img src="assets/avatar-neima.jpg" class="agent-mini-avatar" alt="Neima">
+                  <div class="agent-header-meta">
+                    <span class="agent-name">Neima Agent</span>
+                    <span class="agent-state-badge" id="simAgentBadge">Idle</span>
+                  </div>
+                </div>
+                <button class="agent-reset-btn" id="simResetBtn" title="Reset Simulation">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                  </svg>
+                  <span>Reset</span>
+                </button>
+              </div>
+
+              <!-- Autonomous Reasoning Feed -->
+              <div class="agent-thought-feed" id="simThoughtFeed">
+                <div class="feed-entry system-entry">
+                  <span class="entry-time">00:01</span>
+                  <span class="entry-text">Session initialized. DOM indexed with 14 Set-of-Marks tags.</span>
+                </div>
+              </div>
+
+              <!-- Agent Action & Human-in-the-Loop Confirmation Box -->
+              <div class="sim-approval-box hidden" id="simApprovalBox">
+                <div class="approval-header">
+                  <span class="approval-tag">Safety Confirmation</span>
+                  <span class="action-name" id="simActionTitle">Click: Submit Payment</span>
+                </div>
+                <p class="approval-desc" id="simActionDesc">Neima requests approval before submitting $450 flight ticket.</p>
+                <div class="approval-btns">
+                  <button class="btn btn-confirm" id="simApproveBtn">Execute</button>
+                  <button class="btn btn-muted" id="simSkipBtn">Skip</button>
+                </div>
+              </div>
+
+              <!-- Interactive Prompt Input Bar -->
+              <div class="agent-input-container">
+                <div class="input-wrapper">
+                  <input type="text" id="simPromptInput" placeholder="Give Neima a command..." value="Find lowest roundtrip fare to Tokyo departing Nov 12">
+                  <button class="send-btn" id="simRunBtn" title="Execute Agent Command">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <line x1="22" y1="2" x2="11" y2="13"></line>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                  </button>
+                </div>
+                <div class="input-meta">
+                  <span>⚡ Auto-pilot active</span>
+                  <span>🔒 Safe persona sandbox</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulator Result Showcase Modal / Tray -->
+        <div class="sim-output-tray hidden" id="simOutputTray">
+          <div class="tray-header">
+            <span class="tray-title" id="simOutputTitle">Extracted Table Result (CSV / JSON)</span>
+            <button class="tray-close" id="simOutputClose">&times;</button>
+          </div>
+          <div class="tray-body" id="simOutputBody"></div>
+          <div class="tray-actions">
+            <button class="btn btn-ghost" id="simDownloadCsvBtn">Download CSV</button>
+            <button class="btn btn-primary" id="simCopyDataBtn">Copy JSON</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Neima: Features Grid -->
+    <section class="features-section" id="features">
+      <div class="section-container">
+        <div class="section-badge">ADVANCED ARCHITECTURE</div>
+        <h2 class="section-heading">Built for True Browser Autonomy</h2>
+        <p class="section-subhead">
+          Standard browser extensions are blind cursors. Neima combines multi-modal visual comprehension with physical spatial presence.
+        </p>
+
+        <div class="features-grid">
+          <div class="feature-card glass-panel">
+            <div class="feature-icon icon-cyan">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="4"></circle>
+                <line x1="12" y1="2" x2="12" y2="4"></line>
+                <line x1="12" y1="20" x2="12" y2="22"></line>
+              </svg>
+            </div>
+            <h3 class="feature-title">3D Muse Companion</h3>
+            <p class="feature-desc">
+              An in-page spatial mascot with gyroscopic orbital rings, animated OLED visor, and reactive eyes that physically floats across coordinates and projects focused laser beams onto active elements.
+            </p>
+          </div>
+
+          <div class="feature-card glass-panel">
+            <div class="feature-icon icon-blue">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+            <h3 class="feature-title">Set-of-Marks (SoM) Indexing</h3>
+            <p class="feature-desc">
+              Tags every interactive link, button, input, and dropdown with clean numbered badges (<code class="font-mono">[1]</code>, <code class="font-mono">[2]</code>). Eliminates hallucinated clicks and achieves 99.4% execution precision.
+            </p>
+          </div>
+
+          <div class="feature-card glass-panel">
+            <div class="feature-icon icon-purple">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <h3 class="feature-title">100% BYOK & Private Local Storage</h3>
+            <p class="feature-desc">
+              Bring Your Own Key or run completely offline with Ollama. Zero telemetry, zero analytics tracking, and no external middleman proxy servers. Your page data never leaves your chosen provider.
+            </p>
+          </div>
+
+          <div class="feature-card glass-panel">
+            <div class="feature-icon icon-emerald">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="3" y1="15" x2="21" y2="15"></line>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+                <line x1="15" y1="3" x2="15" y2="21"></line>
+              </svg>
+            </div>
+            <h3 class="feature-title">1-Click Table Scraper</h3>
+            <p class="feature-desc">
+              Instantly converts complex HTML tables, flight grids, financial reports, and product catalogs into clean, structured CSV or JSON files with custom delimiters.
+            </p>
+          </div>
+
+          <div class="feature-card glass-panel">
+            <div class="feature-icon icon-amber">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </div>
+            <h3 class="feature-title">Smart Form Persona Autofill</h3>
+            <p class="feature-desc">
+              Configure personal or business personas in Settings. Neima autonomously maps fields across complex multi-step application or checkout flows, pausing before critical submit buttons.
+            </p>
+          </div>
+
+          <div class="feature-card glass-panel">
+            <div class="feature-icon icon-rose">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="4 17 10 11 4 5"></polyline>
+                <line x1="12" y1="19" x2="20" y2="19"></line>
+              </svg>
+            </div>
+            <h3 class="feature-title">DevTools Console Trap & Debugger</h3>
+            <p class="feature-desc">
+              Listens for unhandled JavaScript runtime exceptions, failed network fetch requests, and promise rejections, giving developers instantaneous root-cause analysis in one click.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Side-by-Side Competitive Matrix -->
+    <section class="comparison-section" id="comparison">
+      <div class="section-container">
+        <div class="section-badge">UNCOMPROMISING LEADERSHIP</div>
+        <h2 class="section-heading">How Neima Compares</h2>
+        <p class="section-subhead">
+          See why power users, researchers, and engineers choose Neima over proprietary locked assistants.
+        </p>
+
+        <div class="table-card glass-panel">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th class="col-feature">Capability</th>
+                <th class="col-neima highlight-col">Neima Browser Agent</th>
+                <th class="col-other">Claude in Chrome</th>
+                <th class="col-other">Generic Copilots</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Interactive 3D Spatial Muse</strong></td>
+                <td class="highlight-col"><span class="check-badge">🚀 Yes (Orbital Rings & Laser)</span></td>
+                <td><span class="cross-badge">❌ Flat Arrow Cursor</span></td>
+                <td><span class="cross-badge">❌ None</span></td>
+              </tr>
+              <tr>
+                <td><strong>Multi-Model Intelligence</strong></td>
+                <td class="highlight-col"><span class="check-badge">✅ Claude 3.7, Gemini 3.8, GPT-4o, Ollama</span></td>
+                <td><span class="cross-badge">⚠️ Claude Only</span></td>
+                <td><span class="cross-badge">⚠️ Single Vendor</span></td>
+              </tr>
+              <tr>
+                <td><strong>100% Offline Local Models (Ollama)</strong></td>
+                <td class="highlight-col"><span class="check-badge">✅ Yes (DeepSeek, Llama 3)</span></td>
+                <td><span class="cross-badge">❌ Cloud Only</span></td>
+                <td><span class="cross-badge">❌ Cloud Only</span></td>
+              </tr>
+              <tr>
+                <td><strong>Set-of-Marks (SoM) Visual Tags</strong></td>
+                <td class="highlight-col"><span class="check-badge">✅ Visible Badges on DOM</span></td>
+                <td><span class="neutral-badge">⚠️ Internal Heuristics</span></td>
+                <td><span class="cross-badge">❌ No</span></td>
+              </tr>
+              <tr>
+                <td><strong>1-Click Table Scraper to CSV/JSON</strong></td>
+                <td class="highlight-col"><span class="check-badge">✅ Built-in Instant Exporter</span></td>
+                <td><span class="cross-badge">❌ Manual Prompting</span></td>
+                <td><span class="cross-badge">❌ No</span></td>
+              </tr>
+              <tr>
+                <td><strong>Zero Telemetry & 100% Privacy</strong></td>
+                <td class="highlight-col"><span class="check-badge">✅ Local Storage Only (BYOK)</span></td>
+                <td><span class="neutral-badge">⚠️ Enterprise Managed</span></td>
+                <td><span class="cross-badge">❌ Remote Telemetry</span></td>
+              </tr>
+              <tr>
+                <td><strong>Cost per Month</strong></td>
+                <td class="highlight-col"><span class="price-free">Free & Open Source</span></td>
+                <td>$20 / user / mo</td>
+                <td>$20 - $30 / mo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Multi-Model Speed & Latency Benchmark -->
+    <section class="models-section" id="models">
+      <div class="section-container">
+        <div class="section-badge">FLEXIBLE INTELLIGENCE</div>
+        <h2 class="section-heading">Connect Any Model in Seconds</h2>
+        <p class="section-subhead">
+          Switch models on the fly directly inside the header dropdown. Optimized for sub-second vision and autonomous tool execution.
+        </p>
+
+        <div class="model-cards-grid">
+          <div class="model-card glass-panel">
+            <div class="model-badge google-badge">Google</div>
+            <h3 class="model-name">Gemini 3.8 Flash</h3>
+            <p class="model-desc">Sub-150ms real-time visual reasoning. Incredible speed for live DOM traversal and form auto-filling.</p>
+            <div class="model-stat">
+              <span class="stat-label">Response Time</span>
+              <span class="stat-val accent-cyan">~118 ms</span>
+            </div>
+            <div class="latency-bar">
+              <div class="latency-fill" style="width: 95%;"></div>
+            </div>
+          </div>
+
+          <div class="model-card glass-panel">
+            <div class="model-badge anthropic-badge">Anthropic</div>
+            <h3 class="model-name">Claude 3.7 Sonnet</h3>
+            <p class="model-desc">Deep hybrid reasoning for multi-step workflows, delicate checkout flows, and debugging complex JS errors.</p>
+            <div class="model-stat">
+              <span class="stat-label">Reasoning Accuracy</span>
+              <span class="stat-val accent-purple">98.9%</span>
+            </div>
+            <div class="latency-bar">
+              <div class="latency-fill fill-purple" style="width: 98%;"></div>
+            </div>
+          </div>
+
+          <div class="model-card glass-panel">
+            <div class="model-badge openai-badge">OpenAI</div>
+            <h3 class="model-name">GPT-4o</h3>
+            <p class="model-desc">Omni multi-modal comprehension with high general knowledge and multilingual instruction following.</p>
+            <div class="model-stat">
+              <span class="stat-label">DOM Recognition</span>
+              <span class="stat-val accent-emerald">97.4%</span>
+            </div>
+            <div class="latency-bar">
+              <div class="latency-fill fill-emerald" style="width: 93%;"></div>
+            </div>
+          </div>
+
+          <div class="model-card glass-panel">
+            <div class="model-badge local-badge">Local / Offline</div>
+            <h3 class="model-name">Ollama (DeepSeek / Llama)</h3>
+            <p class="model-desc">Runs entirely on your local GPU. Zero API cost, zero external data transfer, total confidentiality.</p>
+            <div class="model-stat">
+              <span class="stat-label">Privacy Guarantee</span>
+              <span class="stat-val accent-amber">100% Local</span>
+            </div>
+            <div class="latency-bar">
+              <div class="latency-fill fill-amber" style="width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Installation & Quick Start Guide (High Conversion) -->
+    <section class="install-section" id="install">
+      <div class="section-container">
+        <div class="install-card glass-panel">
+          <div class="install-header">
+            <div class="section-badge">GET STARTED IN 30 SECONDS</div>
+            <h2 class="install-heading">Install Neima into Google Chrome</h2>
+            <p class="install-subhead">
+              Load unpacked directly into Chrome Developer Mode. No accounts, no subscriptions, and instant zero-config simulation mode included.
+            </p>
+          </div>
+
+          <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-num">01</div>
+              <h3 class="step-title">Open Extension Manager</h3>
+              <p class="step-desc">In your Chrome address bar, navigate to:</p>
+              <div class="code-copy-box">
+                <code>chrome://extensions</code>
+                <button class="copy-btn" data-copy="chrome://extensions">Copy</button>
+              </div>
+            </div>
+
+            <div class="step-card">
+              <div class="step-num">02</div>
+              <h3 class="step-title">Enable Developer Mode</h3>
+              <p class="step-desc">Toggle the <strong>"Developer mode"</strong> switch in the upper-right corner of the Extensions page.</p>
+              <div class="step-visual-indicator">
+                <span class="indicator-tag">Developer mode: ON</span>
+              </div>
+            </div>
+
+            <div class="step-card">
+              <div class="step-num">03</div>
+              <h3 class="step-title">Click "Load Unpacked"</h3>
+              <p class="step-desc">Click the Load Unpacked button in the top left, and select the folder:</p>
+              <div class="code-copy-box">
+                <code id="folderPathCode">C:\Users\Niema Digita\Niema</code>
+                <button class="copy-btn" data-copy="C:\Users\Niema Digita\Niema">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="install-cta-footer">
+            <button id="downloadZipBtn" class="btn btn-large btn-primary glow-button">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Download Extension Bundle (.ZIP)</span>
+            </button>
+            <button id="pinExtensionGuideBtn" class="btn btn-large btn-ghost">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>How to Pin in Chrome</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="faq-section" id="faq">
+      <div class="section-container">
+        <div class="section-badge">FREQUENTLY ASKED QUESTIONS</div>
+        <h2 class="section-heading">Everything You Need to Know</h2>
+
+        <div class="faq-list">
+          <details class="faq-item glass-panel">
+            <summary class="faq-question">
+              <span>What makes Neima different from official Claude in Chrome?</span>
+              <span class="faq-chevron">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>Neima introduces an interactive in-page 3D spatial companion that physically flies across coordinates, shoots luminous targeting lasers at interactive elements, and communicates in real time through floating speech bubbles. Furthermore, Neima is multi-model (Claude 3.7, Gemini 3.8, GPT-4o, and local Ollama), includes a 1-click table scraper, developer console error traps, and stores 100% of your data locally with zero cloud telemetry.</p>
+            </div>
+          </details>
+
+          <details class="faq-item glass-panel">
+            <summary class="faq-question">
+              <span>Do I need to pay for an API key to test Neima?</span>
+              <span class="faq-chevron">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>No! Neima features a built-in Autonomous Local Engine (Simulation Mode) that lets you test full page navigation, table scraping, and Set-of-Marks indexing completely free without any API key. If you have your own Anthropic, Gemini, or OpenAI key, or run Ollama locally, you can plug it into Settings at zero additional cost.</p>
+            </div>
+          </details>
+
+          <details class="faq-item glass-panel">
+            <summary class="faq-question">
+              <span>Is my browsing data or personal information stored or tracked?</span>
+              <span class="faq-chevron">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>Never. Neima collects zero analytics, telemetry, or user logs. API keys and personal autofill profiles are stored exclusively in your local Chrome browser storage (<code>chrome.storage.local</code>). Page screenshots and text are dispatched only to your designated model provider endpoint.</p>
+            </div>
+          </details>
+
+          <details class="faq-item glass-panel">
+            <summary class="faq-question">
+              <span>Can I approve actions before Neima clicks or types?</span>
+              <span class="faq-chevron">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>Yes! Neima includes Human-in-the-Loop Smart Safety. By default, routine navigation executes seamlessly while sensitive actions (checkout buttons, payments, account deletions, password entry) pause automatically to request your explicit approval.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="footer-global">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="brand-link">
+          <img src="assets/avatar-neima.jpg" alt="Neima Logo" class="footer-avatar">
+          <span class="brand-name">Neima</span>
+        </div>
+        <p class="footer-tagline">
+          Next-generation autonomous AI browser agent and 3D Muse companion. Open-source, private, and human-aligned.
+        </p>
+      </div>
+
+      <div class="footer-links-group">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#simulator">Live Simulator</a>
+          <a href="#features">Features</a>
+          <a href="#comparison">Claude Comparison</a>
+          <a href="#models">Model Benchmarks</a>
+        </div>
+        <div class="footer-col">
+          <h4>Get Started</h4>
+          <a href="#install">Install Unpacked</a>
+          <a href="CHROMEWEBSTORE.md">Web Store Listing</a>
+          <a href="README.md">Documentation</a>
+          <a href="options/options.html">Settings UI</a>
+        </div>
+        <div class="footer-col">
+          <h4>Privacy & Open Source</h4>
+          <a href="CHROMEWEBSTORE.md#3-privacy--data-use-disclosure">Privacy Policy</a>
+          <a href="#faq">FAQ</a>
+          <a href="https://github.com" target="_blank" rel="noopener">GitHub Repository</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-container">
+        <span>© 2026 Neima AI. Released under MIT Open Source License.</span>
+        <div class="bottom-badges">
+          <span class="badge-pill">Manifest V3 Certified</span>
+          <span class="badge-pill">Zero Remote Logs</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal: Download / Install Bundle Walkthrough -->
+  <div class="modal-backdrop hidden" id="installModal" role="dialog" aria-modal="true" aria-labelledby="modalHeading">
+    <div class="modal-box glass-panel">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <img src="assets/avatar-neima.jpg" class="modal-avatar" alt="Neima">
+          <h3 id="modalHeading">Install Neima in 3 Simple Steps</h3>
+        </div>
+        <button class="modal-close-btn" id="closeInstallModal" aria-label="Close Modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-step">
+          <span class="m-step-badge">1</span>
+          <div>
+            <strong>Open Chrome Extensions</strong>
+            <p>Paste this URL into a new Chrome tab:</p>
+            <div class="code-copy-box">
+              <code>chrome://extensions</code>
+              <button class="copy-btn" data-copy="chrome://extensions">Copy URL</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-step">
+          <span class="m-step-badge">2</span>
+          <div>
+            <strong>Enable Developer Mode</strong>
+            <p>Switch on the toggle in the upper right-hand corner of the page.</p>
+          </div>
+        </div>
+
+        <div class="modal-step">
+          <span class="m-step-badge">3</span>
+          <div>
+            <strong>Click "Load Unpacked" and Select Folder</strong>
+            <p>Point Chrome to your project directory:</p>
+            <div class="code-copy-box">
+              <code>C:\Users\Niema Digita\Niema</code>
+              <button class="copy-btn" data-copy="C:\Users\Niema Digita\Niema">Copy Path</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-callout">
+          <span class="callout-icon">✨</span>
+          <p>That's it! Pin Neima to your Chrome toolbar, click the icon, and watch your 3D Muse companion come to life.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="modalDismissBtn">Done</button>
+        <button class="btn btn-primary" id="modalCopyAllBtn">Copy All Details</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summon Living In-Page Muse Trigger (High Engagement Floating Widget) -->
+  <button class="summon-companion-trigger" id="summonCompanionTrigger" title="Summon Neima Living 3D Muse on this tab">
+    <div class="summon-avatar-glow">
+      <img src="assets/avatar-neima.jpg" alt="Neima Muse" class="summon-img">
+      <span class="summon-pulse"></span>
+    </div>
+    <div class="summon-text-group">
+      <span class="summon-label">Living 3D Co-Pilot</span>
+      <span class="summon-action">Summon on This Page ✦</span>
+    </div>
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast-notification hidden" id="globalToast">
+    <span class="toast-icon">✓</span>
+    <span class="toast-msg" id="toastMessage">Copied to clipboard!</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

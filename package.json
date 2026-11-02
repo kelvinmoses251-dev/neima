@@ -1,0 +1,22 @@
+{
+  "name": "neima-browser-agent",
+  "version": "1.0.0",
+  "description": "Neima — AI Autonomous Browser Agent & 3D Muse Companion",
+  "main": "background.js",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node server.js",
+    "icons": "node generate-icons.js",
+    "check": "node -c server.js && node -c background.js && node -c app.js && node -c generate-icons.js && node -c content/content.js && node -c sidepanel/sidepanel.js && node -c sidepanel/agent.js && node -c sidepanel/api.js && node -c options/options.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "ai-agent",
+    "browser-automation",
+    "sidepanel",
+    "manifest-v3",
+    "3d-avatar"
+  ],
+  "author": "Niema",
+  "license": "MIT"
+}

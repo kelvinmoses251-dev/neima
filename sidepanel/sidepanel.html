@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neima Browser Co-Pilot</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../icons/icon-16.png">
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body class="theme-dark">
+  <div class="shell">
+    <!-- Clean Minimalist Header -->
+    <header class="header">
+      <div class="brand-group">
+        <div class="brand-mark avatar-3d-mark" id="brandAvatar" title="Neima 3D Companion">
+          <img src="../assets/avatar-neima.jpg" class="sidepanel-muse-avatar" alt="Neima">
+          <span class="avatar-ring-pulse"></span>
+        </div>
+        <div class="brand-details">
+          <span class="brand-title">Neima</span>
+          <span class="status-indicator-dot" id="statusBadgeDot"></span>
+          <span class="status-text-subtle" id="agentStatusIndicator">Ready</span>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <select id="modelSelector" class="model-select" title="Select AI Model">
+          <optgroup label="Google Gemini (Primary)">
+            <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (High)</option>
+            <option value="argon-4">Argon 4</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+            <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+          </optgroup>
+          <optgroup label="Claude (Anthropic)">
+            <option value="claude-3-7-sonnet">Claude 3.7 Sonnet</option>
+            <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+            <option value="claude-3-5-haiku">Claude 3.5 Haiku</option>
+          </optgroup>
+          <optgroup label="OpenAI">
+            <option value="gpt-4o">GPT-4o</option>
+            <option value="gpt-4o-mini">GPT-4o Mini</option>
+          </optgroup>
+          <optgroup label="Local / Private">
+            <option value="simulation">Autonomous Local Engine</option>
+            <option value="ollama">Ollama (Local LLM)</option>
+          </optgroup>
+        </select>
+
+        <button id="scheduleShortcutsBtn" class="action-icon-btn" title="Scheduled Shortcuts &amp; Automations (Clock)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </button>
+
+        <button id="workflowsLibraryBtn" class="action-icon-btn" title="Recorded Workflows &amp; Shortcuts">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </button>
+
+        <button id="recordWorkflowBtn" class="action-icon-btn record-action-btn" title="Record New Browser Workflow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="7"></circle>
+          </svg>
+        </button>
+
+        <button id="openOptionsBtn" class="action-icon-btn" title="Settings &amp; API Keys">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Active Workflow Recording Banner (Claude in Chrome parity) -->
+    <div class="recording-banner hidden" id="recordingBanner">
+      <div class="recording-banner-left">
+        <span class="recording-pulse-dot"></span>
+        <span class="recording-text" id="recordingStatusText">Recording Workflow (0 actions captured)...</span>
+      </div>
+      <div class="recording-banner-actions">
+        <button id="cancelRecordBtn" class="btn-rec-cancel" title="Discard recorded actions">Cancel</button>
+        <button id="stopRecordBtn" class="btn-rec-stop" title="Save this workflow">Finish &amp; Save</button>
+      </div>
+    </div>
+
+    <!-- Context Address Bar -->
+    <div class="context-bar">
+      <div class="context-tab">
+        <img id="tabFavicon" class="favicon" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>" alt="">
+        <span id="tabUrl" class="tab-domain">Loading active tab...</span>
+      </div>
+
+      <div class="context-toggles">
+        <label class="toggle-pill" title="Toggle persistent 3D Companion avatar on page">
+          <input type="checkbox" id="toggleCompanionBtn" checked>
+          <span class="pill-track"></span>
+          <span class="pill-text">3D Muse</span>
+        </label>
+        <label class="toggle-pill" title="Attach tab visual screenshot context">
+          <input type="checkbox" id="includeVisionToggle" checked>
+          <span class="pill-track"></span>
+          <span class="pill-text">Vision</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Main Message Feed Container -->
+    <main class="feed" id="feedContainer">
+      <div class="welcome" id="welcomeCard">
+        <div class="muse-presence-card">
+          <div class="muse-presence-avatar-wrap">
+            <img src="../assets/avatar-neima.jpg" class="presence-avatar" alt="Neima 3D Muse">
+            <div class="presence-orbit-ring"></div>
+          </div>
+          <div class="welcome-heading">
+            <h2>Neima Co-Pilot</h2>
+            <p>Spatial browser intelligence for your code, projects, and web research.</p>
+          </div>
+        </div>
+
+        <div class="prompt-chips">
+          <button class="chip" data-prompt="Summarize this page with key takeaways, insights and conclusions">
+            <span class="chip-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </span>
+            <span>Summarize page insights</span>
+          </button>
+          <button class="chip" data-prompt="Analyze this project / webpage, explain how it works and highlight any issues">
+            <span class="chip-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <span>Analyze project &amp; code</span>
+          </button>
+          <button class="chip" data-prompt="Extract all tables on this page to structured CSV">
+            <span class="chip-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>
+            </span>
+            <span>Extract tables to CSV</span>
+          </button>
+          <button class="chip" data-prompt="Check for JavaScript errors and diagnose page console">
+            <span class="chip-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+              </svg>
+            </span>
+            <span>Diagnose console logs</span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Step Approval Card -->
+    <div class="approval-panel hidden" id="approvalCard">
+      <div class="approval-meta">
+        <span class="approval-indicator">Pending Action</span>
+        <span class="approval-action-text" id="approvalActionTitle">Click Button</span>
+      </div>
+      <p class="approval-desc" id="approvalActionReason">Reason: Submit form</p>
+      <div class="approval-actions">
+        <button id="approveBtn" class="btn btn-confirm">Execute</button>
+        <button id="skipBtn" class="btn btn-muted">Skip</button>
+        <button id="abortBtn" class="btn btn-danger">Stop</button>
+      </div>
+    </div>
+
+    <!-- Smart Selection Floating Bar (Claude-parity) -->
+    <div class="selection-floating-bar hidden" id="selectionBar">
+      <div class="selection-preview">
+        <span class="selection-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+        </span>
+        <span class="selection-text" id="selectionTextSnippet">Selected text...</span>
+      </div>
+      <div class="selection-actions">
+        <button class="sel-btn" id="selExplainBtn">Explain</button>
+        <button class="sel-btn" id="selRefactorBtn">Refactor</button>
+        <button class="sel-btn" id="selSummarizeBtn">Summarize</button>
+        <button class="sel-dismiss-btn" id="selDismissBtn" title="Dismiss selection">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer Input Bar: Streamlined, Fast & Clutter-Free -->
+    <footer class="footer">
+      <!-- Task Queue Tray -->
+      <div class="queue-tray hidden" id="queueTray">
+        <div class="queue-tray-header">
+          <div class="queue-label">
+            <span class="queue-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </span>
+            <span id="queueCountLabel">Queued Tasks (0)</span>
+          </div>
+          <button id="clearQueueBtn" class="queue-clear-btn" title="Clear all queued messages">Clear All</button>
+        </div>
+        <div class="queue-items-list" id="queueItemsList"></div>
+      </div>
+
+      <!-- Attachment Pills Tray -->
+      <div class="attachment-tray hidden" id="attachmentTray"></div>
+
+      <div class="input-card">
+        <!-- Quick Tools & Actions Menu Popover -->
+        <div class="tools-popover hidden" id="toolsPopover">
+          <button class="popover-item" id="popSummarize">
+            <span class="popover-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </span>
+            <span>Summarize Page</span>
+          </button>
+          <button class="popover-item" id="popInspect">
+            <span class="popover-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <span>Inspect Element</span>
+          </button>
+          <button class="popover-item" id="popExtract">
+            <span class="popover-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>
+            </span>
+            <span>Extract Tables</span>
+          </button>
+          <button class="popover-item" id="popAutofill">
+            <span class="popover-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </span>
+            <span>Autofill Persona</span>
+          </button>
+          <button class="popover-item" id="popRecord">
+            <span class="popover-icon" style="color: #ef4444;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="8"></circle>
+              </svg>
+            </span>
+            <span>Record Workflow</span>
+          </button>
+          <button class="popover-item" id="popWorkflows">
+            <span class="popover-icon" style="color: #10b981;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </span>
+            <span>Saved Workflows</span>
+          </button>
+          <button class="popover-item" id="popSchedule">
+            <span class="popover-icon" style="color: #38bdf8;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </span>
+            <span>Scheduled Shortcuts</span>
+          </button>
+          <button class="popover-item" id="popMultiTabs">
+            <span class="popover-icon" style="color: #a855f7;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </span>
+            <span>Handle All Tabs</span>
+          </button>
+          <button class="popover-item" id="popConsole">
+            <span class="popover-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="4 17 10 11 4 5"></polyline>
+                <line x1="12" y1="19" x2="20" y2="19"></line>
+              </svg>
+            </span>
+            <span>Console Errors</span>
+          </button>
+        </div>
+
+        <input type="file" id="fileAttachmentInput" style="display:none;" multiple>
+
+        <button id="toolsMenuBtn" class="ctrl-btn tools-action" title="Quick Tools &amp; Actions">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"></path>
+          </svg>
+        </button>
+
+        <button id="attachFileBtn" class="ctrl-btn attach-action" title="Attach file or code snippet">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+          </svg>
+        </button>
+
+        <textarea id="promptInput" rows="1" placeholder="Ask Claude/Neima anything, or type a task..." autofocus></textarea>
+        
+        <div class="input-actions">
+          <button id="queuePromptBtn" class="ctrl-btn queue-action" title="Send to Queue (runs sequentially)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </button>
+
+          <button id="stopAgentBtn" class="ctrl-btn stop-action hidden" title="Stop">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+            </svg>
+          </button>
+          
+          <button id="sendPromptBtn" class="ctrl-btn send-action" title="Send instruction (Enter)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal for Tables / Logs -->
+  <div class="modal-backdrop hidden" id="genericModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3 id="modalTitle">Extracted Data</h3>
+        <button class="modal-x" id="modalCloseBtn">&times;</button>
+      </div>
+      <div class="modal-content" id="modalBody"></div>
+      <div class="modal-foot" id="modalFooter"></div>
+    </div>
+  </div>
+
+  <script type="module" src="sidepanel.js"></script>
+</body>
+</html>

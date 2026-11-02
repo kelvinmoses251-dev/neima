@@ -1,0 +1,479 @@
+/* Neima: Minimalist Spatial Companion & In-Page Visual HUD */
+
+/* Clean Technical Numbered Badges */
+.neima-badge {
+  position: absolute !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #000000 !important;
+  color: #38bdf8 !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  padding: 2px 5px !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5) !important;
+  z-index: 2147483640 !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  transform: translate(-50%, -50%) !important;
+  transition: transform 0.12s ease, opacity 0.15s ease !important;
+}
+
+/* ==========================================================================
+   NEIMA: REFINED MINIMALIST SPATIAL COMPANION
+   ========================================================================== */
+
+.neima-muse-companion {
+  position: fixed !important;
+  width: 52px !important;
+  height: 64px !important;
+  pointer-events: auto !important;
+  cursor: grab !important;
+  z-index: 2147483647 !important;
+  transform-style: preserve-3d !important;
+  perspective: 600px !important;
+  transition: left 0.45s cubic-bezier(0.16, 1, 0.3, 1), top 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.6)) !important;
+  user-select: none !important;
+}
+
+.neima-muse-companion:active,
+.neima-muse-companion.dragging {
+  cursor: grabbing !important;
+  transition: none !important;
+}
+
+.neima-muse-companion.hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: scale(0.7) translateY(20px) !important;
+}
+
+/* ==========================================================================
+   NEIMA: LIVING 3D COMPANION (BLINKING, EYE TRACKING, HEAD TURNING, SMILING)
+   ========================================================================== */
+
+.neima-muse-companion {
+  position: fixed !important;
+  width: 58px !important;
+  height: 68px !important;
+  pointer-events: auto !important;
+  cursor: grab !important;
+  z-index: 2147483647 !important;
+  perspective: 700px !important;
+  transform-style: preserve-3d !important;
+  transition: left 0.45s cubic-bezier(0.16, 1, 0.3, 1), top 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.65)) !important;
+  user-select: none !important;
+}
+
+.neima-muse-companion:active,
+.neima-muse-companion.dragging {
+  cursor: grabbing !important;
+  transition: none !important;
+}
+
+.neima-muse-companion.hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: scale(0.7) translateY(20px) !important;
+}
+
+/* Organic Floating & Breathing Bob */
+.neima-muse-floater {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  animation: neima-living-float 3.2s ease-in-out infinite !important;
+  transform-style: preserve-3d !important;
+}
+
+/* 3D Head Rotator (Tilts smoothly towards user mouse in true perspective) */
+.neima-muse-rotator {
+  position: relative !important;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  transform-style: preserve-3d !important;
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Deep Metallic Cyber-Sphere Chassis */
+.neima-muse-head-sphere {
+  position: relative !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle at 35% 25%, #273549 0%, #111827 55%, #030712 100%) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.6) !important;
+  box-shadow: 
+    inset 0 3px 6px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(56, 189, 248, 0.5) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform-style: preserve-3d !important;
+  overflow: visible !important;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease !important;
+}
+
+/* Gyroscopic 3D Orbital Rings */
+.neima-muse-ring {
+  position: absolute !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+}
+
+.neima-muse-ring-1 {
+  width: 58px !important;
+  height: 58px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
+  border-top-color: #38bdf8 !important;
+  animation: neima-orbit-1 3.8s linear infinite !important;
+}
+
+.neima-muse-ring-2 {
+  width: 52px !important;
+  height: 52px !important;
+  border: 1px dashed rgba(56, 189, 248, 0.6) !important;
+  animation: neima-orbit-2 4.4s linear infinite reverse !important;
+}
+
+/* Dynamic State Ring Halos */
+.neima-muse-companion.thinking .neima-muse-head-sphere {
+  border-color: rgba(192, 132, 252, 0.85) !important;
+  box-shadow: 0 0 24px rgba(192, 132, 252, 0.65) !important;
+}
+
+.neima-muse-companion.thinking .neima-muse-ring-1 {
+  border-top-color: #c084fc !important;
+  animation-duration: 1.4s !important;
+}
+
+.neima-muse-companion.thinking .neima-muse-ring-2 {
+  border-color: rgba(192, 132, 252, 0.8) !important;
+  animation-duration: 1.8s !important;
+}
+
+.neima-muse-companion.acting .neima-muse-head-sphere {
+  border-color: rgba(16, 185, 129, 0.85) !important;
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.65) !important;
+}
+
+.neima-muse-companion.acting .neima-muse-ring-1 {
+  border-top-color: #10b981 !important;
+}
+
+.neima-muse-companion.happy .neima-muse-head-sphere {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 28px rgba(56, 189, 248, 0.8) !important;
+}
+
+/* Live Animated OLED Visor Dome */
+.neima-muse-visor-dome {
+  position: relative !important;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  background: #03060f !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9), 0 0 10px rgba(56, 189, 248, 0.4) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 2 !important;
+}
+
+.neima-face-svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+/* Natural Eye Blinking */
+.neima-eye {
+  transform-origin: center center !important;
+  transition: transform 0.08s ease-in-out !important;
+}
+
+.neima-eye.blinking {
+  transform: scaleY(0.08) !important;
+}
+
+/* Interactive Eye Gaze Shift */
+.neima-face-gaze {
+  transition: transform 0.1s ease-out !important;
+}
+
+/* Dynamic Glowing Mouth */
+.neima-mouth {
+  transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.25s ease !important;
+}
+
+/* Holographic Specular Glare & Scanlines */
+.neima-muse-hologram-scan {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: linear-gradient(180deg, transparent 0%, rgba(56, 189, 248, 0.2) 50%, transparent 100%) !important;
+  animation: neima-scanline 2s linear infinite !important;
+  pointer-events: none !important;
+  border-radius: 50% !important;
+}
+
+@keyframes neima-scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes neima-living-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Precision Drop Shadow */
+.neima-muse-shadow {
+  position: absolute !important;
+  bottom: 0 !important;
+  width: 26px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70%) !important;
+  animation: neima-shadow-scale 2.8s ease-in-out infinite !important;
+}
+
+.neima-muse-jet {
+  position: absolute !important;
+  bottom: 8px !important;
+  width: 6px !important;
+  height: 10px !important;
+  background: radial-gradient(circle, #38bdf8 0%, rgba(56, 189, 248, 0) 80%) !important;
+  border-radius: 50% !important;
+  filter: blur(1px) !important;
+}
+
+/* Fine Targeting Laser */
+.neima-muse-beam {
+  position: absolute !important;
+  top: 38px !important;
+  left: 25px !important;
+  width: 1.5px !important;
+  height: 0px !important;
+  background: linear-gradient(180deg, #38bdf8 0%, rgba(56, 189, 248, 0) 100%) !important;
+  box-shadow: 0 0 4px #38bdf8 !important;
+  transform-origin: top center !important;
+  opacity: 0 !important;
+  transition: opacity 0.15s ease, height 0.25s ease !important;
+  z-index: 1 !important;
+}
+
+.neima-muse-companion.pointing .neima-muse-beam {
+  opacity: 1 !important;
+  height: 38px !important;
+}
+
+/* Clean Matte Action Toast / Speech */
+.neima-muse-speech {
+  position: absolute !important;
+  bottom: 52px !important;
+  background: #000000 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  padding: 4px 9px !important;
+  border-radius: 6px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  opacity: 0 !important;
+  transform: translateY(4px) !important;
+  transition: all 0.2s ease !important;
+}
+
+.neima-muse-speech.active {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Subtle Click Shockwave */
+.neima-click-ripple {
+  position: absolute !important;
+  border-radius: 50% !important;
+  border: 1.5px solid #38bdf8 !important;
+  pointer-events: none !important;
+  z-index: 2147483645 !important;
+  transform: translate(-50%, -50%) scale(0) !important;
+  animation: neima-ripple-anim 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards !important;
+}
+
+@keyframes neima-ripple-anim {
+  0% {
+    width: 8px;
+    height: 8px;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  100% {
+    width: 65px;
+    height: 65px;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+}
+
+.neima-highlight-active {
+  outline: 2px solid #38bdf8 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4) !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+.neima-highlight-sensitive {
+  outline: 2.5px solid #f59e0b !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.55) !important;
+  animation: neima-pulse-warning 1.4s infinite alternate !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+@keyframes neima-pulse-warning {
+  from {
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+  }
+  to {
+    box-shadow: 0 0 22px rgba(245, 158, 11, 0.8);
+  }
+}
+
+.neima-inspector-box {
+  position: absolute !important;
+  background-color: rgba(56, 189, 248, 0.08) !important;
+  border: 1.5px dashed #38bdf8 !important;
+  pointer-events: none !important;
+  z-index: 2147483644 !important;
+  box-sizing: border-box !important;
+  border-radius: 4px !important;
+}
+
+.neima-inspector-tooltip {
+  position: absolute !important;
+  background: #090b10 !important;
+  color: #f8fafc !important;
+  padding: 3px 7px !important;
+  border-radius: 4px !important;
+  font-family: var(--font-mono, monospace) !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+  z-index: 2147483645 !important;
+  pointer-events: none !important;
+  white-space: nowrap !important;
+  transform: translateY(-100%) !important;
+  margin-top: -4px !important;
+}
+
+.neima-inspector-tooltip .tag-name {
+  color: #38bdf8 !important;
+}
+
+.neima-toast-container {
+  position: fixed !important;
+  top: 14px !important;
+  right: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  z-index: 2147483647 !important;
+  pointer-events: none !important;
+}
+
+.neima-toast {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: rgba(10, 12, 16, 0.95) !important;
+  color: #f1f5f9 !important;
+  padding: 7px 12px !important;
+  border-radius: 6px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+  animation: neima-toast-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  max-width: 340px !important;
+  pointer-events: auto !important;
+}
+
+.neima-toast-icon {
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  background: #1e293b !important;
+  border: 1px solid #38bdf8 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 9px !important;
+  color: #38bdf8 !important;
+  flex-shrink: 0 !important;
+}
+
+@keyframes neima-float {
+  0%, 100% {
+    transform: translateY(0px) rotateY(var(--rot-y, 0deg)) rotateX(var(--rot-x, 0deg));
+  }
+  50% {
+    transform: translateY(-5px) rotateY(var(--rot-y, 0deg)) rotateX(var(--rot-x, 0deg));
+  }
+}
+
+@keyframes neima-shadow-scale {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(0.85); opacity: 0.3; }
+}
+
+@keyframes neima-orbit-1 {
+  0% { transform: rotateX(65deg) rotateZ(0deg); }
+  100% { transform: rotateX(65deg) rotateZ(360deg); }
+}
+
+@keyframes neima-orbit-2 {
+  0% { transform: rotateX(-50deg) rotateZ(0deg); }
+  100% { transform: rotateX(-50deg) rotateZ(360deg); }
+}
+
+@keyframes neima-blink {
+  0%, 94%, 98%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
+}
+
+@keyframes neima-toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
