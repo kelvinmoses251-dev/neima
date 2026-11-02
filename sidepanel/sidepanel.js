@@ -14,7 +14,7 @@ let taskQueue = [];
 let activeSelectionText = '';
 let attachedFiles = [];
 
-document.addEventListener('DOMContentLoaded', async () => {
+async function initApp() {
   try {
     await initSettings();
   } catch (err) {
@@ -44,7 +44,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (err) {
     console.error('[Neima] Error in initMessageListener:', err);
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
 
 /**
  * Load settings and initialize API Client
@@ -236,6 +242,18 @@ function initAgent() {
  */
 async function initTabTracking() {
   try {
+    if (chrome.tabs?.query) {
+      const [cur] = await chrome.tabs.query({ active: true, currentWindow: true }).catch(() => []);
+      if (cur) {
+        updateActiveTabUI(cur);
+        return;
+      }
+      const [focused] = await chrome.tabs.query({ active: true, lastFocusedWindow: true }).catch(() => []);
+      if (focused) {
+        updateActiveTabUI(focused);
+        return;
+      }
+    }
     const res = await chrome.runtime.sendMessage({ type: 'GET_ACTIVE_TAB' });
     if (res?.tab) {
       updateActiveTabUI(res.tab);

@@ -536,7 +536,6 @@ Both pins have been indexed. Would you like me to trigger an automatic download 
         finalMessage: `I've analyzed the active page for "${trimmedGoal || 'your request'}". You can give me direct instructions such as "Go to...", "Search for...", or use the Inspect tool to select elements.`
       };
     }
-  }
 
   /**
    * Evaluates if a planned action touches sensitive credentials, payment details, or destructive operations
