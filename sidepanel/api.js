@@ -275,9 +275,9 @@ export class UnifiedApiClient {
     });
 
     let targetModel = 'auto';
-    if (this.model === 'freellmapi-deepseek') targetModel = 'deepseek-r1';
-    else if (this.model === 'freellmapi-gemini') targetModel = 'gemini-2.0-flash';
-    else if (this.model === 'freellmapi-llama') targetModel = 'llama-3.3-70b-instruct';
+    if (this.model === 'freellmapi-deepseek') targetModel = 'deepseek-r1-distill-qwen-32b';
+    else if (this.model === 'freellmapi-gemini') targetModel = 'gemini-flash-lite';
+    else if (this.model === 'freellmapi-llama') targetModel = 'llama-3.3-70b';
     else if (this.model && !this.model.startsWith('freellmapi')) targetModel = this.model;
 
     const key = this.apiKey || 'freellmapi-1f4e138cd1bbee9085b68e36fd735b3785a51ab786a76b42';
