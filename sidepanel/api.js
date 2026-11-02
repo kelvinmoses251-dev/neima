@@ -10,6 +10,7 @@ export class UnifiedApiClient {
     this.model = config.model || 'gemini-3.8-flash';
     this.apiKey = config.apiKey || '';
     this.ollamaUrl = config.ollamaUrl || 'http://localhost:11434';
+    this.freellmapiUrl = config.freellmapiUrl || 'http://localhost:3001/v1';
   }
 
   updateConfig(newConfig) {
@@ -17,14 +18,17 @@ export class UnifiedApiClient {
     if (newConfig.model) this.model = newConfig.model;
     if (newConfig.apiKey !== undefined) this.apiKey = newConfig.apiKey;
     if (newConfig.ollamaUrl) this.ollamaUrl = newConfig.ollamaUrl;
+    if (newConfig.freellmapiUrl) this.freellmapiUrl = newConfig.freellmapiUrl;
   }
 
   async sendMessage({ systemPrompt, messages, screenshotBase64, onStreamChunk }) {
-    if (!this.apiKey && this.provider !== 'ollama' && this.provider !== 'simulation') {
+    if (!this.apiKey && this.provider !== 'ollama' && this.provider !== 'simulation' && this.provider !== 'freellmapi') {
       return this.runLocalAutonomousEngine(messages, systemPrompt, onStreamChunk);
     }
 
     switch (this.provider) {
+      case 'freellmapi':
+        return this.callFreeLLMAPI({ systemPrompt, messages, screenshotBase64, onStreamChunk });
       case 'anthropic':
         return this.callAnthropic({ systemPrompt, messages, screenshotBase64, onStreamChunk });
       case 'gemini':
@@ -250,6 +254,60 @@ export class UnifiedApiClient {
     const text = data.message?.content || '';
     if (onStreamChunk) onStreamChunk(text);
     return text;
+  }
+
+  async callFreeLLMAPI({ systemPrompt, messages, screenshotBase64, onStreamChunk }) {
+    const baseUrl = this.freellmapiUrl || 'http://localhost:3001/v1';
+    const formattedMessages = [{ role: 'system', content: systemPrompt }];
+
+    messages.forEach((m, idx) => {
+      if (m.role === 'user' && idx === messages.length - 1 && screenshotBase64) {
+        formattedMessages.push({
+          role: 'user',
+          content: [
+            { type: 'text', text: m.content },
+            { type: 'image_url', image_url: { url: screenshotBase64 } }
+          ]
+        });
+      } else {
+        formattedMessages.push({ role: m.role, content: m.content });
+      }
+    });
+
+    let targetModel = 'auto';
+    if (this.model === 'freellmapi-deepseek') targetModel = 'deepseek-r1';
+    else if (this.model === 'freellmapi-gemini') targetModel = 'gemini-2.0-flash';
+    else if (this.model === 'freellmapi-llama') targetModel = 'llama-3.3-70b-instruct';
+    else if (this.model && !this.model.startsWith('freellmapi')) targetModel = this.model;
+
+    const key = this.apiKey || 'freellmapi-1f4e138cd1bbee9085b68e36fd735b3785a51ab786a76b42';
+
+    try {
+      const res = await fetch(`${baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${key}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: targetModel,
+          messages: formattedMessages
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(`FreeLLMAPI Error (${res.status}): ${err.error?.message || res.statusText}`);
+      }
+
+      const data = await res.json();
+      const text = data.choices?.[0]?.message?.content || '';
+      if (onStreamChunk) onStreamChunk(text);
+      return text;
+    } catch (err) {
+      console.warn('[Neima API] FreeLLMAPI error, falling back to local autonomous engine:', err.message);
+      return this.runLocalAutonomousEngine(messages, systemPrompt, onStreamChunk);
+    }
   }
 
   /**

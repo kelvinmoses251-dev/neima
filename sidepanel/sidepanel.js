@@ -51,7 +51,9 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 async function initSettings() {
   const defaults = {
-    selectedModel: 'gemini-3.8-flash',
+    selectedModel: 'freellmapi-auto',
+    freellmapiKey: 'freellmapi-1f4e138cd1bbee9085b68e36fd735b3785a51ab786a76b42',
+    freellmapiUrl: 'http://localhost:3001/v1',
     anthropicKey: '',
     geminiKey: '',
     openaiKey: '',
@@ -70,8 +72,12 @@ async function initSettings() {
   const stored = await chrome.storage.local.get(null);
   currentSettings = { ...defaults, ...stored };
 
-  // Supported models (Gemini 3.8 Flash, Argon 4, Gemini 2.5, Claude, GPT, Local)
+  // Supported models (FreeLLMAPI, Gemini 3.8 Flash, Argon 4, Gemini 2.5, Claude, GPT, Local)
   const validModels = [
+    'freellmapi-auto',
+    'freellmapi-deepseek',
+    'freellmapi-gemini',
+    'freellmapi-llama',
     'gemini-3.8-flash',
     'argon-4',
     'gemini-2.5-pro',
@@ -130,7 +136,8 @@ async function initSettings() {
     provider,
     model: currentSettings.selectedModel,
     apiKey,
-    ollamaUrl: currentSettings.ollamaUrl
+    ollamaUrl: currentSettings.ollamaUrl,
+    freellmapiUrl: currentSettings.freellmapiUrl
   });
 
   updateStatusBadge(provider, apiKey);
@@ -142,13 +149,13 @@ function updateStatusBadge(provider, apiKey) {
 
   if (apiKey) {
     if (badge) {
-      badge.innerText = 'Connected';
+      badge.innerText = provider === 'freellmapi' ? 'FreeLLMAPI' : 'Connected';
       badge.style.color = '#34d399';
     }
     if (badgeDot) {
       badgeDot.style.background = '#10b981';
       badgeDot.style.boxShadow = '0 0 6px #10b981';
-      badgeDot.title = `${provider} connected and ready`;
+      badgeDot.title = provider === 'freellmapi' ? 'FreeLLMAPI Router Active (34+ Free Providers)' : `${provider} connected and ready`;
     }
   } else if (provider === 'simulation') {
     if (badge) {
@@ -185,17 +192,19 @@ function updateStatusBadge(provider, apiKey) {
 }
 
 function getProviderForModel(modelName) {
-  if (!modelName) return 'gemini';
+  if (!modelName) return 'freellmapi';
   if (modelName === 'simulation') return 'simulation';
   if (modelName === 'ollama') return 'ollama';
+  if (modelName.startsWith('freellmapi')) return 'freellmapi';
   if (modelName.startsWith('claude')) return 'anthropic';
   if (modelName.startsWith('gemini') || modelName.includes('argon')) return 'gemini';
   if (modelName.startsWith('gpt')) return 'openai';
-  return 'gemini';
+  return 'freellmapi';
 }
 
 function getApiKeyForProvider(provider, settings) {
   switch (provider) {
+    case 'freellmapi': return settings.freellmapiKey || 'freellmapi-1f4e138cd1bbee9085b68e36fd735b3785a51ab786a76b42';
     case 'anthropic': return settings.anthropicKey || '';
     case 'gemini': return settings.geminiKey || '';
     case 'openai': return settings.openaiKey || '';

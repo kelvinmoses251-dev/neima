@@ -75,6 +75,23 @@
         </div>
 
         <div class="form-group">
+          <label for="freellmapiUrl">FreeLLMAPI Router URL (34+ Free Providers)</label>
+          <input type="text" id="freellmapiUrl" placeholder="http://localhost:3001/v1">
+          <span class="field-hint">Connects to your local FreeLLMAPI gateway. Open <a href="http://localhost:3001" target="_blank" style="color: #38bdf8;">Dashboard (http://localhost:3001)</a> to manage free providers.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="freellmapiKey">FreeLLMAPI Unified Key</label>
+          <div class="input-with-icon">
+            <input type="password" id="freellmapiKey" placeholder="freellmapi-...">
+            <button type="button" class="toggle-visibility" data-target="freellmapiKey" title="Toggle visibility">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+          <span class="field-hint">Unified API key from your local FreeLLMAPI dashboard.</span>
+        </div>
+
+        <div class="form-group">
           <label for="ollamaUrl">Local Ollama URL (Offline)</label>
           <input type="text" id="ollamaUrl" placeholder="http://localhost:11434">
           <span class="field-hint">Connects to your local Ollama instance (DeepSeek, Llama 3.2, Qwen).</span>

@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Load existing settings
   const defaults = {
+    freellmapiKey: 'freellmapi-1f4e138cd1bbee9085b68e36fd735b3785a51ab786a76b42',
+    freellmapiUrl: 'http://localhost:3001/v1',
     anthropicKey: '',
     geminiKey: '',
     openaiKey: '',
@@ -32,10 +34,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const stored = await chrome.storage.local.get(defaults);
 
-  // Populate fields
   document.getElementById('anthropicKey').value = stored.anthropicKey || '';
   document.getElementById('geminiKey').value = stored.geminiKey || '';
   document.getElementById('openaiKey').value = stored.openaiKey || '';
+  document.getElementById('freellmapiUrl').value = stored.freellmapiUrl || 'http://localhost:3001/v1';
+  document.getElementById('freellmapiKey').value = stored.freellmapiKey || 'freellmapi-1f4e138cd1bbee9085b68e36fd735b3785a51ab786a76b42';
   document.getElementById('ollamaUrl').value = stored.ollamaUrl || 'http://localhost:11434';
   document.getElementById('autoConfirm').checked = !!stored.autoConfirm;
   const sensitiveCheck = document.getElementById('requireSensitiveApproval');
@@ -84,6 +87,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Save Settings
   saveBtn.addEventListener('click', async () => {
     const toSave = {
+      freellmapiKey: document.getElementById('freellmapiKey').value.trim() || 'freellmapi-1f4e138cd1bbee9085b68e36fd735b3785a51ab786a76b42',
+      freellmapiUrl: document.getElementById('freellmapiUrl').value.trim() || 'http://localhost:3001/v1',
       anthropicKey: document.getElementById('anthropicKey').value.trim(),
       geminiKey: document.getElementById('geminiKey').value.trim(),
       openaiKey: document.getElementById('openaiKey').value.trim(),
