@@ -1187,25 +1187,67 @@ function initInPageLivingMuse() {
       inPageCompanion.style.cursor = 'grab';
 
       inPageCompanion.innerHTML = `
-        <div class="neima-muse-speech active" id="demoInpageSpeech" style="position: absolute; bottom: 82px; right: 0; background: rgba(9,13,24,0.95); border: 1px solid #00f0ff; color: #fff; padding: 7px 16px; border-radius: 12px; font-size: 12px; font-weight: 500; white-space: nowrap; box-shadow: 0 0 18px rgba(0,240,255,0.35);">
+        <div class="neima-muse-speech active" id="demoInpageSpeech" style="position: absolute; bottom: 105px; right: 0; background: rgba(9,13,24,0.95); border: 1px solid #38bdf8; color: #fff; padding: 7px 16px; border-radius: 12px; font-size: 12px; font-weight: 500; white-space: nowrap; box-shadow: 0 0 18px rgba(56,189,248,0.35);">
           Neima living companion online! Drag me or click anywhere ✦
         </div>
-        <div class="neima-muse-floater" style="animation: neima-living-float 3s ease-in-out infinite;">
-          <div class="neima-muse-head-sphere" style="width: 62px; height: 62px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #334155, #0a0f1d); border: 1.5px solid rgba(0,240,255,0.6); box-shadow: 0 0 20px rgba(0,240,255,0.4); display: flex; align-items: center; justify-content: center;">
-            <div class="neima-muse-visor-dome" style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; background: #040813; display: flex; align-items: center; justify-content: center;">
-              <svg viewBox="0 0 52 52" style="width: 100%; height: 100%;">
-                <g id="demoFaceGaze">
-                  <g class="neima-eye" transform="translate(18, 22)">
-                    <path d="M -5 3 L 0 -3 L 5 3" fill="none" stroke="#00f0ff" stroke-width="2.6" stroke-linecap="round" />
+        <div class="neima-muse-floater">
+          <div class="neima-muse-rotator" id="demoRotator">
+            <!-- Head Sphere & Visor -->
+            <div class="neima-muse-head-sphere" id="demoHeadSphere">
+              <div class="neima-muse-ring neima-muse-ring-1"></div>
+              <div class="neima-muse-ring neima-muse-ring-2"></div>
+              <div class="neima-muse-visor-dome">
+                <svg class="neima-face-svg" viewBox="0 0 52 52">
+                  <rect x="7" y="9" width="38" height="34" rx="17" fill="#040813" stroke="rgba(56, 189, 248, 0.45)" stroke-width="1.2" />
+                  <g id="demoFaceGaze" class="neima-face-gaze">
+                    <g class="neima-eye" transform="translate(18, 22)">
+                      <path d="M -5 3 L 0 -3 L 5 3" fill="none" stroke="#00f0ff" stroke-width="2.6" stroke-linecap="round" />
+                    </g>
+                    <g class="neima-eye" transform="translate(34, 22)">
+                      <path d="M -5 3 L 0 -3 L 5 3" fill="none" stroke="#00f0ff" stroke-width="2.6" stroke-linecap="round" />
+                    </g>
+                    <path d="M 21 32 Q 26 36 31 32" fill="none" stroke="#00f0ff" stroke-width="2.2" stroke-linecap="round" />
                   </g>
-                  <g class="neima-eye" transform="translate(34, 22)">
-                    <path d="M -5 3 L 0 -3 L 5 3" fill="none" stroke="#00f0ff" stroke-width="2.6" stroke-linecap="round" />
-                  </g>
-                  <path d="M 21 32 Q 26 37 31 32" fill="none" stroke="#00f0ff" stroke-width="2.2" stroke-linecap="round" />
-                </g>
-              </svg>
+                </svg>
+                <div class="neima-muse-hologram-scan"></div>
+              </div>
+            </div>
+
+            <!-- Cyber-Torso & Glowing Reactor Core -->
+            <div class="neima-muse-body">
+              <div class="neima-muse-chest-armor">
+                <div class="neima-muse-core-reactor"></div>
+              </div>
+              <div class="neima-muse-arm arm-left">
+                <div class="arm-upper"></div>
+                <div class="arm-forearm"></div>
+                <div class="arm-hand"><span class="finger-pointer"></span></div>
+              </div>
+              <div class="neima-muse-arm arm-right">
+                <div class="arm-upper"></div>
+                <div class="arm-forearm"></div>
+                <div class="arm-hand"><span class="finger-pointer"></span></div>
+              </div>
+            </div>
+
+            <!-- Pelvis & Legs -->
+            <div class="neima-muse-pelvis"></div>
+            <div class="neima-muse-legs-container">
+              <div class="neima-muse-leg leg-left">
+                <div class="leg-thigh"></div>
+                <div class="leg-knee"></div>
+                <div class="leg-shin"></div>
+                <div class="leg-foot"></div>
+              </div>
+              <div class="neima-muse-leg leg-right">
+                <div class="leg-thigh"></div>
+                <div class="leg-knee"></div>
+                <div class="leg-shin"></div>
+                <div class="leg-foot"></div>
+              </div>
             </div>
           </div>
+          <div class="neima-muse-shadow"></div>
         </div>
       `;
 

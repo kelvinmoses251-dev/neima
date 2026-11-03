@@ -255,6 +255,27 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           break;
         }
 
+        case 'DOWNLOAD_FILE': {
+          const { url, filename, conflictAction = 'uniquify' } = message;
+          if (!url) {
+            sendResponse({ error: 'Missing download URL' });
+            break;
+          }
+          try {
+            const downloadId = await chrome.downloads.download({
+              url,
+              filename: filename || 'neima_video_showcase.mp4',
+              conflictAction,
+              saveAs: false
+            });
+            sendResponse({ success: true, downloadId });
+          } catch (dlErr) {
+            console.warn('[Neima SW] Download notice:', dlErr);
+            sendResponse({ error: dlErr.message });
+          }
+          break;
+        }
+
         default:
           sendResponse({ status: 'unhandled_type' });
       }

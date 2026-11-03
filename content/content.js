@@ -350,15 +350,18 @@
             </div>
           </div>
 
-          <!-- Cyber-Legs for Walking around the Screen -->
+          <!-- Pelvis & Cyber-Legs for Walking around the Screen -->
+          <div class="neima-muse-pelvis"></div>
           <div class="neima-muse-legs-container">
             <div class="neima-muse-leg leg-left" id="neimaLegL">
               <div class="leg-thigh"></div>
+              <div class="leg-knee"></div>
               <div class="leg-shin"></div>
               <div class="leg-foot"></div>
             </div>
             <div class="neima-muse-leg leg-right" id="neimaLegR">
               <div class="leg-thigh"></div>
+              <div class="leg-knee"></div>
               <div class="leg-shin"></div>
               <div class="leg-foot"></div>
             </div>
@@ -547,17 +550,23 @@
     const dx = e.clientX - centerX;
     const dy = e.clientY - centerY;
 
-    const rotator = museEl.querySelector('#neimaRotator');
+    const headSphere = museEl.querySelector('#neimaHeadSphere');
     const gazeGroup = museEl.querySelector('#neimaFaceGaze');
+    const bodyEl = museEl.querySelector('.neima-muse-body');
 
-    if (rotator && !museEl.classList.contains('acting')) {
-      const maxRotY = 32;
-      const maxRotX = 24;
+    if (headSphere && !museEl.classList.contains('acting')) {
+      const maxRotY = 28;
+      const maxRotX = 20;
       const rotY = Math.max(-maxRotY, Math.min(maxRotY, (dx / (window.innerWidth / 2)) * maxRotY));
       const rotX = Math.max(-maxRotX, Math.min(maxRotX, -(dy / (window.innerHeight / 2)) * maxRotX));
-      const rotZ = rotY * 0.12; // Natural head tilt/cock
+      const rotZ = rotY * 0.1; // Natural head tilt
 
-      rotator.style.transform = `perspective(600px) rotateY(${rotY.toFixed(1)}deg) rotateX(${rotX.toFixed(1)}deg) rotateZ(${rotZ.toFixed(1)}deg)`;
+      headSphere.style.transform = `perspective(500px) rotateY(${rotY.toFixed(1)}deg) rotateX(${rotX.toFixed(1)}deg) rotateZ(${rotZ.toFixed(1)}deg)`;
+    }
+
+    if (bodyEl && !museEl.classList.contains('acting')) {
+      const bodyRotY = Math.max(-8, Math.min(8, (dx / (window.innerWidth / 2)) * 8));
+      bodyEl.style.transform = `perspective(500px) rotateY(${bodyRotY.toFixed(1)}deg)`;
     }
 
     if (gazeGroup && !museEl.classList.contains('acting')) {
@@ -575,28 +584,28 @@
 
       const idleDuration = Date.now() - lastUserActivityTime;
       if (idleDuration > 5500) {
-        const rotator = museEl.querySelector('#neimaRotator');
+        const headSphere = museEl.querySelector('#neimaHeadSphere');
         const gazeGroup = museEl.querySelector('#neimaFaceGaze');
-        if (!rotator || !gazeGroup) return;
+        if (!headSphere || !gazeGroup) return;
 
         // Step 1: Curious head tilt left & glance left
-        rotator.style.transition = 'transform 0.45s ease';
-        rotator.style.transform = 'perspective(600px) rotateY(-18deg) rotateX(8deg) rotateZ(-12deg)';
+        headSphere.style.transition = 'transform 0.45s ease';
+        headSphere.style.transform = 'perspective(500px) rotateY(-18deg) rotateX(8deg) rotateZ(-12deg)';
         gazeGroup.style.transform = 'translate(-3px, -1px)';
 
         setTimeout(() => {
           // Step 2: Glance right
           gazeGroup.style.transform = 'translate(3px, 0px)';
-          rotator.style.transform = 'perspective(600px) rotateY(16deg) rotateX(-6deg) rotateZ(8deg)';
+          headSphere.style.transform = 'perspective(500px) rotateY(16deg) rotateX(-6deg) rotateZ(8deg)';
 
           setTimeout(() => {
             // Step 3: Return to center and smile brightly!
-            rotator.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg) rotateZ(0deg)';
+            headSphere.style.transform = 'perspective(500px) rotateY(0deg) rotateX(0deg) rotateZ(0deg)';
             gazeGroup.style.transform = 'translate(0px, 0px)';
             setCompanionMood('happy');
 
             setTimeout(() => {
-              rotator.style.transition = '';
+              headSphere.style.transition = '';
               setCompanionMood('idle');
             }, 1200);
           }, 800);
