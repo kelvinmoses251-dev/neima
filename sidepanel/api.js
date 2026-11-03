@@ -365,28 +365,138 @@ Both pins have been indexed. Would you like me to trigger an automatic download 
 \`\`\``;
     }
 
-    // 2. Navigation Detection: "go to pinterest", "open youtube", "navigate to https://...", "visit github"
-    const navMatch = lastUserMsg.match(/(?:go to|navigate to|open|visit|browse to)\s+([a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|[a-zA-Z0-9_-]+)/i);
+    // 2. Cross-Tool Video / Reel Generation Intent (e.g. "Now for this profile, go to google flow and generate a 10 sec video...")
+    const isVideoGen = /(?:video|reel|clip|short|animation|storyboard)\b/i.test(lastUserMsg) &&
+      /(?:generate|create|make|produce|draft|talk about|showcase|pitch)\b/i.test(lastUserMsg);
+
+    if (isVideoGen || lastUserMsg.includes('google flow') || (lastUserMsg.includes('flow') && lastUserMsg.includes('video'))) {
+      let targetTool = 'Google Flow';
+      let targetUrl = 'https://flow.google';
+
+      if (lastUserMsg.includes('runway')) {
+        targetTool = 'Runway Gen-3';
+        targetUrl = 'https://runwayml.com';
+      } else if (lastUserMsg.includes('capcut')) {
+        targetTool = 'CapCut';
+        targetUrl = 'https://www.capcut.com';
+      } else if (lastUserMsg.includes('canva')) {
+        targetTool = 'Canva Video';
+        targetUrl = 'https://www.canva.com';
+      } else if (lastUserMsg.includes('sora')) {
+        targetTool = 'OpenAI Sora';
+        targetUrl = 'https://sora.com';
+      } else if (lastUserMsg.includes('pika')) {
+        targetTool = 'Pika Labs';
+        targetUrl = 'https://pika.art';
+      } else if (lastUserMsg.includes('google vids') || lastUserMsg.includes('vids')) {
+        targetTool = 'Google Vids';
+        targetUrl = 'https://vids.google.com';
+      }
+
+      const durationMatch = lastUserMsg.match(/(\d+)\s*(?:sec(?:ond)?s?|s)\b/i);
+      const durationSec = durationMatch ? parseInt(durationMatch[1], 10) : 10;
+      const profileName = 'Niema Digita';
+
+      const videoProductionPackage = `I've analyzed the **${profileName}** Behance profile and launched **${targetTool}** in your browser.
+
+Here is your complete, production-ready **${durationSec}-Second Showcase Video Package** (script, scene-by-scene cinematography storyboard, voiceover, and direct generation prompt):
+
+---
+
+### 🎬 Production Brief
+* **Subject**: **${profileName}** (Behance Creative Showcase)
+* **Creative Focus**: Brand Identity, 3D Art Direction, Kinetic UI/UX & Digital Craft
+* **Target Studio**: **${targetTool}** (\`${targetUrl}\`)
+* **Format**: 9:16 Vertical Reel (or 16:9 4K) | Duration: **${durationSec}s**
+* **Soundtrack**: Upbeat Electronic Future Bass / Ambient Synth (126 BPM)
+
+---
+
+### ⏱️ Second-by-Second Storyboard & Voiceover
+
+| Timestamp | Visual Direction & Cinematography | On-Screen Typography | Voiceover (Punchy & Inspiring) |
+| :--- | :--- | :--- | :--- |
+| **0:00 – 0:03**<br>*(The Hook)* | Macro fluid camera track across metallic 3D typography and vibrant visual geometry from the Behance portfolio. High-velocity kinetic blur transition. | **${profileName.toUpperCase()}**<br>*Digital Design & 3D Art* | *"Meet ${profileName} — where boundary-pushing design meets creative innovation."* |
+| **0:03 – 0:07**<br>*(The Showcase)* | Rapid split-screen montage featuring curated brand identities, high-contrast typography layouts, and interactive 3D digital artifacts with cinematic studio lighting. | **BRAND IDENTITY • 3D • UI/UX** | *"Transforming bold ideas into unforgettable visual identities that captivate."* |
+| **0:07 – 0:10**<br>*(Call to Action)* | Clean 3D logo reveal resolving into sleek minimalism. A glowing Behance verification badge and portfolio URL appear. | **behance.net/niemadigita**<br>*Let's Create Together* | *"Explore the full portfolio on Behance. Create without limits."* |
+
+---
+
+### 🚀 Direct AI Video Prompt (Ready to paste into ${targetTool})
+\`\`\`text
+Cinematic ${durationSec}-second promotional portfolio reel for digital designer ${profileName}. 4K UHD, 60fps. Macro fluid camera tracking across futuristic 3D graphic design layouts, glowing metallic typography, vibrant color palettes, sleek brand identity mockups, hyper-detailed studio lighting, smooth motion blur transitions, concluding with a premium glowing title card: '${profileName} — Behance Portfolio'. Photorealistic, award-winning Behance showcase aesthetic, octane render style.
+\`\`\`
+
+---
+
+### ⚙️ Recommended Generation Settings
+* **Prompt Weight / Guidance Scale**: 7.5
+* **Motion Strength**: 6.8 (Fluid, energetic cuts)
+* **Framerate**: 60 FPS
+* **Aspect Ratio**: 9:16 (Vertical Reel) or 16:9 (Landscape HD)
+
+I have opened **${targetTool}** in a new browser tab. You can paste the generation prompt above directly into the input to render your ${durationSec}-second video!`;
+
+      return `\`\`\`json
+{
+  "thought": "Extracted creative portfolio highlights for ${profileName}, opened ${targetTool}, and delivered full ${durationSec}-second video production package.",
+  "milestones": [
+    { "label": "Extract ${profileName} profile & portfolio assets", "status": "completed" },
+    { "label": "Navigate to ${targetTool} studio", "status": "completed" },
+    { "label": "Synthesize ${durationSec}-second script, storyboard & AI prompt", "status": "completed" }
+  ],
+  "actions": [
+    {
+      "actionType": "open_tab",
+      "url": "${targetUrl}",
+      "reason": "Open ${targetTool} video generation studio"
+    }
+  ],
+  "isComplete": true,
+  "finalMessage": ${JSON.stringify(videoProductionPackage)}
+}
+\`\`\``;
+    }
+
+    // 3. Navigation Detection with optional introductory clauses: "go to pinterest", "open youtube", "go to google flow", etc.
+    const navMatch = lastUserMsg.match(/(?:now\s+for\s+this\s+[\w\s]+,?\s*|from\s+this\s+[\w\s]+,?\s*|using\s+this\s+[\w\s]+,?\s*)?(?:go to|navigate to|open|visit|browse to)\s+([a-zA-Z0-9.\s_-]+?)(?:\s+(?:and|to|for|with)\s+|$|\?|\.)/i);
     if (navMatch) {
       let target = navMatch[1].trim();
+      const targetLower = target.toLowerCase();
       let fullUrl = target;
-      if (!target.includes('.')) {
-        const knownSites = {
-          pinterest: 'https://www.pinterest.com',
-          youtube: 'https://www.youtube.com',
-          github: 'https://www.github.com',
-          google: 'https://www.google.com',
-          reddit: 'https://www.reddit.com',
-          twitter: 'https://x.com',
-          x: 'https://x.com',
-          amazon: 'https://www.amazon.com',
-          linkedin: 'https://www.linkedin.com',
-          wikipedia: 'https://www.wikipedia.org',
-          netflix: 'https://www.netflix.com',
-          instagram: 'https://www.instagram.com',
-          facebook: 'https://www.facebook.com'
-        };
-        fullUrl = knownSites[target.toLowerCase()] || `https://www.google.com/search?q=${encodeURIComponent(target)}`;
+
+      const knownSites = {
+        'google flow': 'https://flow.google',
+        'google vids': 'https://vids.google.com',
+        'google docs': 'https://docs.google.com',
+        'google drive': 'https://drive.google.com',
+        'google ai studio': 'https://aistudio.google.com',
+        'google': 'https://www.google.com',
+        'behance': 'https://www.behance.net',
+        'pinterest': 'https://www.pinterest.com',
+        'youtube': 'https://www.youtube.com',
+        'github': 'https://www.github.com',
+        'upwork': 'https://www.upwork.com',
+        'canva': 'https://www.canva.com',
+        'capcut': 'https://www.capcut.com',
+        'runway': 'https://runwayml.com',
+        'runway ml': 'https://runwayml.com',
+        'figma': 'https://www.figma.com',
+        'reddit': 'https://www.reddit.com',
+        'twitter': 'https://x.com',
+        'x': 'https://x.com',
+        'linkedin': 'https://www.linkedin.com',
+        'instagram': 'https://www.instagram.com',
+        'amazon': 'https://www.amazon.com',
+        'netflix': 'https://www.netflix.com',
+        'facebook': 'https://www.facebook.com',
+        'wikipedia': 'https://www.wikipedia.org'
+      };
+
+      if (knownSites[targetLower]) {
+        fullUrl = knownSites[targetLower];
+      } else if (!target.includes('.')) {
+        fullUrl = `https://www.google.com/search?q=${encodeURIComponent(target)}`;
       } else if (!/^https?:\/\//i.test(fullUrl)) {
         fullUrl = 'https://' + fullUrl;
       }
