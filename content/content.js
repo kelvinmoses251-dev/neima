@@ -236,7 +236,7 @@
   });
 
   /**
-   * 3D MUSE COMPANION AVATAR MANAGER (PERSISTENT, DRAGGABLE & AMBIENT ROAMING)
+   * 3D MUSE COMPANION AVATAR MANAGER (LIFELIKE 3D CHARACTER & AUTONOMOUS ON-TASK ROAMING)
    */
   let companionX = Math.max(30, window.innerWidth - 85);
   let companionY = Math.max(30, window.innerHeight - 135);
@@ -256,6 +256,12 @@
   let idleCuriosityTimer = null;
   let lastUserActivityTime = Date.now();
 
+  // Autonomous Task Roaming Engine state
+  let isOnActiveTask = false;
+  let taskRoamTimer = null;
+  let currentTaskStatus = 'IDLE';
+  let isExecutingTargetAction = false;
+
   function ensureMuseCompanion() {
     const parent = document.body || document.documentElement;
     if (!parent) return null;
@@ -273,103 +279,73 @@
 
     if (museEl && parent.contains(museEl)) return museEl;
 
+    const avatarUrl = chrome?.runtime?.getURL ? chrome.runtime.getURL('assets/avatar-neima.jpg') : 'assets/avatar-neima.jpg';
+
     museEl = document.createElement('div');
     museEl.className = 'neima-muse-companion idle-hidden';
     museEl.style.left = `${companionX}px`;
     museEl.style.top = `${companionY}px`;
-    museEl.setAttribute('title', 'Neima Living 3D Cyber Companion (Active during tasks • Walks & Clicks • Draggable)');
+    museEl.setAttribute('title', 'Neima Living 3D Companion (Active during tasks • Walks & Clicks • Draggable)');
     museEl.innerHTML = `
       <div class="neima-muse-speech" id="neimaMuseSpeech">Neima Ready</div>
       <div class="neima-muse-floater">
         <div class="neima-muse-rotator" id="neimaRotator">
-          <!-- Head Sphere & Visor -->
-          <div class="neima-muse-head-sphere" id="neimaHeadSphere">
-            <div class="neima-muse-ring neima-muse-ring-1"></div>
-            <div class="neima-muse-ring neima-muse-ring-2"></div>
-            <div class="neima-muse-visor-dome">
-              <svg class="neima-face-svg" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <filter id="neimaCyberGlow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-
-                <!-- Dark OLED Visor Screen -->
-                <rect x="7" y="9" width="38" height="34" rx="17" fill="#040813" stroke="rgba(56, 189, 248, 0.45)" stroke-width="1.2" />
-
-                <!-- Moving Eye Gaze & Mouth Group -->
-                <g id="neimaFaceGaze" class="neima-face-gaze">
-                  <!-- Left Eye -->
-                  <g id="neimaEyeL" class="neima-eye" transform="translate(18, 22)">
-                    <path class="eye-shape" d="M -5 3 L 0 -3 L 5 3" fill="none" stroke="#00f0ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" filter="url(#neimaCyberGlow)" />
-                  </g>
-
-                  <!-- Right Eye -->
-                  <g id="neimaEyeR" class="neima-eye" transform="translate(34, 22)">
-                    <path class="eye-shape" d="M -5 3 L 0 -3 L 5 3" fill="none" stroke="#00f0ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" filter="url(#neimaCyberGlow)" />
-                  </g>
-
-                  <!-- Animated Glowing Smile -->
-                  <path id="neimaMouth" class="neima-mouth" d="M 21 32 Q 26 36 31 32" fill="none" stroke="#00f0ff" stroke-width="2.2" stroke-linecap="round" filter="url(#neimaCyberGlow)" />
-                </g>
-
-                <!-- Visor Glass Specular Arc Highlight -->
-                <path d="M 12 16 A 14 14 0 0 1 40 16" fill="none" stroke="rgba(255, 255, 255, 0.45)" stroke-width="1.6" stroke-linecap="round" />
-                <circle cx="15" cy="15" r="1.5" fill="rgba(255, 255, 255, 0.6)" />
-              </svg>
-              <div class="neima-muse-hologram-scan"></div>
+          <!-- Lifelike 3D Character Head (Pixar/Disney 3D Style) -->
+          <div class="neima-3d-character-head" id="neimaHeadSphere">
+            <div class="neima-head-frame">
+              <img src="${avatarUrl}" class="neima-head-portrait" alt="Neima 3D Companion" id="neimaFaceImg" />
+              <div class="neima-head-eye-blink" id="neimaEyeBlink"></div>
+              <div class="neima-head-specular"></div>
             </div>
           </div>
 
-          <!-- Cyber-Torso & Glowing Reactor Core -->
-          <div class="neima-muse-body">
-            <div class="neima-muse-chest-armor">
-              <div class="neima-muse-core-reactor"></div>
+          <!-- Lifelike 3D Humanoid Body (Sleek Dark Techwear Hoodie) -->
+          <div class="neima-3d-character-body">
+            <div class="neima-hoodie-torso">
+              <div class="neima-hoodie-collar"></div>
+              <div class="neima-hoodie-strings"></div>
+              <div class="neima-hoodie-badge">N</div>
             </div>
 
-            <!-- Left Cyber-Arm -->
+            <!-- Natural Human Arms (Hoodie sleeves + organic hands) -->
             <div class="neima-muse-arm arm-left" id="neimaArmL">
-              <div class="arm-upper"></div>
-              <div class="arm-forearm"></div>
-              <div class="arm-hand">
-                <span class="finger-pointer"></span>
+              <div class="arm-sleeve"></div>
+              <div class="arm-hand-natural">
+                <span class="hand-palm"></span>
               </div>
             </div>
 
-            <!-- Right Cyber-Arm (Reaches & Clicks) -->
+            <!-- Right Arm (Reaches & Clicks) -->
             <div class="neima-muse-arm arm-right" id="neimaArmR">
-              <div class="arm-upper"></div>
-              <div class="arm-forearm"></div>
-              <div class="arm-hand">
+              <div class="arm-sleeve"></div>
+              <div class="arm-hand-natural">
+                <span class="hand-palm"></span>
                 <span class="finger-pointer"></span>
               </div>
             </div>
           </div>
 
-          <!-- Pelvis & Cyber-Legs for Walking around the Screen -->
-          <div class="neima-muse-pelvis"></div>
-          <div class="neima-muse-legs-container">
+          <!-- Cargo Joggers & 3D Sneakers for Natural Walking -->
+          <div class="neima-3d-legs-container">
             <div class="neima-muse-leg leg-left" id="neimaLegL">
-              <div class="leg-thigh"></div>
-              <div class="leg-knee"></div>
-              <div class="leg-shin"></div>
-              <div class="leg-foot"></div>
+              <div class="leg-pant-thigh"></div>
+              <div class="leg-pant-shin"></div>
+              <div class="neima-sneaker">
+                <div class="sneaker-upper"></div>
+                <div class="sneaker-sole"></div>
+              </div>
             </div>
             <div class="neima-muse-leg leg-right" id="neimaLegR">
-              <div class="leg-thigh"></div>
-              <div class="leg-knee"></div>
-              <div class="leg-shin"></div>
-              <div class="leg-foot"></div>
+              <div class="leg-pant-thigh"></div>
+              <div class="leg-pant-shin"></div>
+              <div class="neima-sneaker">
+                <div class="sneaker-upper"></div>
+                <div class="sneaker-sole"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="neima-muse-beam"></div>
-      <div class="neima-muse-jet"></div>
       <div class="neima-muse-shadow"></div>
     `;
 
@@ -460,7 +436,7 @@
     return museEl;
   }
 
-  // 1. Natural Organic Eye Blinking System
+  // 1. Natural Organic Eye Blinking System (Soft eyelid over 3D eyes)
   function startBlinkCycle() {
     clearTimeout(blinkCycleTimer);
     function scheduleBlink() {
@@ -473,65 +449,54 @@
     }
 
     function executeBlink(callback) {
-      const eyeL = museEl?.querySelector('#neimaEyeL');
-      const eyeR = museEl?.querySelector('#neimaEyeR');
-      if (!eyeL || !eyeR) return callback?.();
+      const eyeBlink = museEl?.querySelector('#neimaEyeBlink');
+      if (!eyeBlink) return callback?.();
 
-      eyeL.classList.add('blinking');
-      eyeR.classList.add('blinking');
+      eyeBlink.classList.add('blinking');
 
       setTimeout(() => {
-        eyeL.classList.remove('blinking');
-        eyeR.classList.remove('blinking');
+        eyeBlink.classList.remove('blinking');
 
         // 30% chance of an expressive double-blink!
         if (Math.random() < 0.3) {
           setTimeout(() => {
-            eyeL.classList.add('blinking');
-            eyeR.classList.add('blinking');
+            eyeBlink.classList.add('blinking');
             setTimeout(() => {
-              eyeL.classList.remove('blinking');
-              eyeR.classList.remove('blinking');
+              eyeBlink.classList.remove('blinking');
               callback?.();
-            }, 90);
-          }, 110);
+            }, 85);
+          }, 100);
         } else {
           callback?.();
         }
-      }, 120);
+      }, 110);
     }
 
     scheduleBlink();
   }
 
-  // 2. Dynamic Smiling & Mood Expressions
+  // 2. Dynamic Mood Expressions
   function setCompanionMood(mood) {
     if (!museEl) return;
-    const mouth = museEl.querySelector('#neimaMouth');
-    const eyeL = museEl.querySelector('#neimaEyeL .eye-shape');
-    const eyeR = museEl.querySelector('#neimaEyeR .eye-shape');
+    const headSphere = museEl.querySelector('#neimaHeadSphere');
+    const eyeBlink = museEl.querySelector('#neimaEyeBlink');
 
     if (mood === 'happy') {
-      if (mouth) mouth.setAttribute('d', 'M 19 31 Q 26 39 33 31'); // Big warm smile
-      if (eyeL) eyeL.setAttribute('d', 'M -5 3 L 0 -3 L 5 3');
-      if (eyeR) eyeR.setAttribute('d', 'M -5 3 L 0 -3 L 5 3');
+      if (headSphere) headSphere.style.transform = 'perspective(500px) rotateZ(-3deg) scale(1.05)';
+      if (eyeBlink) eyeBlink.classList.remove('blinking', 'winking');
     } else if (mood === 'thinking') {
-      if (mouth) mouth.setAttribute('d', 'M 22 34 Q 26 34 30 34'); // Thoughtful line
-      if (eyeL) eyeL.setAttribute('d', 'M -4 1 Q 0 -3 4 1');
-      if (eyeR) eyeR.setAttribute('d', 'M -4 1 Q 0 -3 4 1');
+      if (headSphere) headSphere.style.transform = 'perspective(500px) rotateY(-14deg) rotateX(8deg) rotateZ(5deg)';
     } else if (mood === 'wink') {
-      if (mouth) mouth.setAttribute('d', 'M 19 31 Q 26 38 33 31');
-      const eyeRGroup = museEl.querySelector('#neimaEyeR');
-      eyeRGroup?.classList.add('blinking');
-      setTimeout(() => {
-        eyeRGroup?.classList.remove('blinking');
-        setCompanionMood('idle');
-      }, 750);
+      if (eyeBlink) {
+        eyeBlink.classList.add('winking');
+        setTimeout(() => {
+          eyeBlink.classList.remove('winking');
+          setCompanionMood('idle');
+        }, 650);
+      }
     } else {
-      // Default gentle smile
-      if (mouth) mouth.setAttribute('d', 'M 21 32 Q 26 36 31 32');
-      if (eyeL) eyeL.setAttribute('d', 'M -5 3 L 0 -3 L 5 3');
-      if (eyeR) eyeR.setAttribute('d', 'M -5 3 L 0 -3 L 5 3');
+      if (headSphere) headSphere.style.transform = 'perspective(500px) rotateY(0deg) rotateX(0deg) rotateZ(0deg)';
+      if (eyeBlink) eyeBlink.classList.remove('blinking', 'winking');
     }
   }
 
@@ -551,12 +516,11 @@
     const dy = e.clientY - centerY;
 
     const headSphere = museEl.querySelector('#neimaHeadSphere');
-    const gazeGroup = museEl.querySelector('#neimaFaceGaze');
-    const bodyEl = museEl.querySelector('.neima-muse-body');
+    const bodyEl = museEl.querySelector('.neima-3d-character-body');
 
-    if (headSphere && !museEl.classList.contains('acting')) {
-      const maxRotY = 28;
-      const maxRotX = 20;
+    if (headSphere && !museEl.classList.contains('acting') && !museEl.classList.contains('walking')) {
+      const maxRotY = 25;
+      const maxRotX = 18;
       const rotY = Math.max(-maxRotY, Math.min(maxRotY, (dx / (window.innerWidth / 2)) * maxRotY));
       const rotX = Math.max(-maxRotX, Math.min(maxRotX, -(dy / (window.innerHeight / 2)) * maxRotX));
       const rotZ = rotY * 0.1; // Natural head tilt
@@ -564,15 +528,9 @@
       headSphere.style.transform = `perspective(500px) rotateY(${rotY.toFixed(1)}deg) rotateX(${rotX.toFixed(1)}deg) rotateZ(${rotZ.toFixed(1)}deg)`;
     }
 
-    if (bodyEl && !museEl.classList.contains('acting')) {
+    if (bodyEl && !museEl.classList.contains('acting') && !museEl.classList.contains('walking')) {
       const bodyRotY = Math.max(-8, Math.min(8, (dx / (window.innerWidth / 2)) * 8));
       bodyEl.style.transform = `perspective(500px) rotateY(${bodyRotY.toFixed(1)}deg)`;
-    }
-
-    if (gazeGroup && !museEl.classList.contains('acting')) {
-      const gazeX = Math.max(-3.5, Math.min(3.5, dx / 90));
-      const gazeY = Math.max(-2.5, Math.min(2.5, dy / 90));
-      gazeGroup.style.transform = `translate(${gazeX.toFixed(1)}px, ${gazeY.toFixed(1)}px)`;
     }
   }, { passive: true });
 
@@ -614,18 +572,131 @@
     }, 9000);
   }
 
-  // 5. Living Ambient Floating & Roaming System
+  // 5. Autonomous On-Task Screen Roaming Engine
+  // Moves anywhere around screen on its own while working and on task
+  function startTaskAutonomousRoaming() {
+    clearTimeout(taskRoamTimer);
+    if (!isOnActiveTask || !isCompanionVisible || !museEl) return;
+
+    function scheduleNextRoam() {
+      if (!isOnActiveTask || !museEl) return;
+      // Roams across screen every 1.8s to 3.6s while on task
+      const roamDelay = 1800 + Math.random() * 1800;
+      taskRoamTimer = setTimeout(async () => {
+        if (!isOnActiveTask || isExecutingTargetAction || isDraggingCompanion) {
+          scheduleNextRoam();
+          return;
+        }
+
+        await executeAutonomousRoamStep();
+        scheduleNextRoam();
+      }, roamDelay);
+    }
+
+    scheduleNextRoam();
+  }
+
+  function stopTaskAutonomousRoaming() {
+    clearTimeout(taskRoamTimer);
+    taskRoamTimer = null;
+  }
+
+  async function executeAutonomousRoamStep() {
+    if (!museEl || isExecutingTargetAction || isDraggingCompanion || !isOnActiveTask) return;
+
+    // Discover readable elements or content landmarks on page
+    const visibleTargets = Array.from(document.querySelectorAll('h1, h2, h3, article, form, button, [data-neima-id], table, .card, p, section, input, a'))
+      .filter((el) => {
+        const r = el.getBoundingClientRect();
+        return r.width > 20 && r.height > 15 && r.top >= 40 && r.bottom <= window.innerHeight - 40;
+      });
+
+    let destX, destY;
+    let roamThought = '';
+
+    if (visibleTargets.length > 0 && Math.random() < 0.7) {
+      // Pick a random visible element to walk over and inspect!
+      const target = visibleTargets[Math.floor(Math.random() * visibleTargets.length)];
+      const rect = target.getBoundingClientRect();
+      destX = Math.max(30, Math.min(window.innerWidth - 85, rect.left + (Math.random() * rect.width * 0.7) - 15));
+      destY = Math.max(30, Math.min(window.innerHeight - 130, rect.top - 80));
+
+      const tag = target.tagName.toLowerCase();
+      if (tag.startsWith('h')) roamThought = 'Inspecting section headers...';
+      else if (tag === 'form' || tag === 'input') roamThought = 'Analyzing input fields...';
+      else if (tag === 'button') roamThought = 'Evaluating actionable controls...';
+      else if (tag === 'table') roamThought = 'Scanning data matrix...';
+      else roamThought = 'Reading page context...';
+    } else {
+      // Roam across open viewport quadrants
+      const zones = [
+        { x: 50 + Math.random() * 140, y: 50 + Math.random() * 120, thought: 'Observing top layout...' },
+        { x: window.innerWidth - 130 - Math.random() * 100, y: 70 + Math.random() * 160, thought: 'Checking sidebar & controls...' },
+        { x: window.innerWidth * 0.45 + (Math.random() - 0.5) * 160, y: 60 + Math.random() * 140, thought: 'Patrolling main view...' },
+        { x: 60 + Math.random() * 180, y: window.innerHeight * 0.45 + Math.random() * 120, thought: 'Reading article context...' },
+        { x: window.innerWidth - 140 - Math.random() * 80, y: window.innerHeight * 0.5 + Math.random() * 140, thought: 'Synthesizing workspace...' }
+      ];
+      const zone = zones[Math.floor(Math.random() * zones.length)];
+      destX = Math.max(25, Math.min(window.innerWidth - 85, zone.x));
+      destY = Math.max(30, Math.min(window.innerHeight - 130, zone.y));
+      roamThought = zone.thought;
+    }
+
+    const curX = parseFloat(museEl.style.left) || companionX;
+    const curY = parseFloat(museEl.style.top) || companionY;
+    const dx = destX - curX;
+    const dy = destY - curY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < 25) return;
+
+    // Face in walking direction
+    if (dx < -15) {
+      museEl.classList.add('facing-left');
+    } else if (dx > 15) {
+      museEl.classList.remove('facing-left');
+    }
+
+    // Start walking stride!
+    museEl.classList.add('walking');
+
+    const walkSpeed = 380; // px/sec
+    const walkDuration = Math.max(350, Math.min(1300, (dist / walkSpeed) * 1000));
+
+    museEl.style.transition = `left ${walkDuration}ms cubic-bezier(0.25, 0.9, 0.35, 1), top ${walkDuration}ms cubic-bezier(0.25, 0.9, 0.35, 1)`;
+    museEl.style.left = `${destX}px`;
+    museEl.style.top = `${destY}px`;
+    companionX = destX;
+    companionY = destY;
+
+    if (Math.random() < 0.4) {
+      showMuseSpeech(roamThought, 2000);
+    }
+
+    await sleep(walkDuration + 30);
+
+    if (museEl) {
+      museEl.classList.remove('walking');
+      // Subtle curious head tilt upon arrival
+      const headSphere = museEl.querySelector('#neimaHeadSphere');
+      if (headSphere) {
+        headSphere.style.transform = `perspective(500px) rotateY(${(Math.random() * 18 - 9).toFixed(1)}deg) rotateX(${Math.random() * 10}deg)`;
+      }
+    }
+  }
+
+  // 6. Idle Ambient Floating (When idle/resting)
   function startAmbientRoaming() {
     clearInterval(ambientRoamTimer);
     let roamAngle = 0;
     ambientRoamTimer = setInterval(() => {
       if (!isCompanionVisible || isDraggingCompanion || !museEl) return;
-      if (museEl.classList.contains('acting') || museEl.classList.contains('pointing')) return;
+      if (isOnActiveTask || museEl.classList.contains('acting') || museEl.classList.contains('walking')) return;
 
       const idleTime = Date.now() - lastUserActivityTime;
       roamAngle += 0.05;
-      const driftX = Math.sin(roamAngle) * (idleTime > 5000 ? 7 : 3);
-      const driftY = Math.cos(roamAngle * 0.8) * (idleTime > 5000 ? 5 : 2);
+      const driftX = Math.sin(roamAngle) * (idleTime > 5000 ? 5 : 2);
+      const driftY = Math.cos(roamAngle * 0.8) * (idleTime > 5000 ? 4 : 2);
 
       museEl.style.transform = `translate3d(${driftX.toFixed(1)}px, ${driftY.toFixed(1)}px, 0)`;
     }, 60);
@@ -654,11 +725,12 @@
   }
 
   /**
-   * Walk & Click: Animates 3D Cyber Companion to walk to target element, tap with finger, and click
+   * Walk & Click: Animates 3D Companion to walk to target element, tap with finger, and click
    */
   async function animateMuseToElement(targetEl, speechText, state = 'acting') {
     const muse = ensureMuseCompanion();
     if (!muse) return;
+    isExecutingTargetAction = true;
     muse.classList.remove('hidden', 'idle-hidden', 'happy', 'acting', 'pointing', 'thinking', 'observing', 'warning', 'clicking', 'celebrating');
     muse.classList.add(state);
 
@@ -681,31 +753,34 @@
 
     const destX = Math.max(15, Math.min(window.innerWidth - 75, targetX - 32));
     const destY = Math.max(15, targetY - 78);
+    muse.style.transition = 'left 220ms cubic-bezier(0.25, 0.9, 0.35, 1), top 220ms cubic-bezier(0.25, 0.9, 0.35, 1)';
     muse.style.left = `${destX}px`;
     muse.style.top = `${destY}px`;
+    companionX = destX;
+    companionY = destY;
 
     if (speechText) {
       showMuseSpeech(speechText, 2500);
     }
 
-    // Fast walking transit: 180ms
-    await sleep(180);
+    // Fast walking transit: 220ms
+    await sleep(220);
 
     // Step 2: Arrived at element -> Stop walking, extend arm and click!
     muse.classList.remove('walking');
     muse.classList.add('clicking');
 
-    // Laser/finger pulse
-    muse.classList.add('pointing');
-
-    // Fast click tap duration: 120ms
-    await sleep(120);
-    muse.classList.remove('pointing', 'clicking');
+    // Natural finger tap duration: 150ms
+    await sleep(150);
+    muse.classList.remove('clicking');
+    isExecutingTargetAction = false;
   }
 
   function returnCompanionToRest() {
     if (!museEl) return;
-    museEl.classList.remove('pointing', 'acting', 'thinking', 'observing', 'warning', 'walking', 'clicking');
+    isOnActiveTask = false;
+    stopTaskAutonomousRoaming();
+    museEl.classList.remove('pointing', 'acting', 'thinking', 'observing', 'warning', 'walking', 'clicking', 'celebrating');
     setCompanionMood('idle');
 
     // Auto-hide off-screen when resting/idle so it does NOT block the user's view
@@ -726,22 +801,24 @@
     switch (status) {
       case 'OBSERVING':
       case 'RUNNING':
-        // Active task started -> Wake up & become visible!
+        // Active task started -> Wake up & roam across screen on its own!
+        isOnActiveTask = true;
+        currentTaskStatus = status;
         muse.classList.remove('hidden', 'idle-hidden');
-        muse.classList.add('observing', 'walking');
+        muse.classList.add('observing');
         setCompanionMood('happy');
-        // Walk smoothly toward center top
-        muse.style.left = `${Math.max(30, window.innerWidth / 2 - 32)}px`;
-        muse.style.top = `40px`;
-        showMuseSpeech(text || 'Observing page...', 2200);
-        setTimeout(() => muse?.classList.remove('walking'), 220);
+        showMuseSpeech(text || 'Observing page & executing task...', 2400);
+        startTaskAutonomousRoaming();
         break;
 
       case 'THINKING':
+        isOnActiveTask = true;
+        currentTaskStatus = status;
         muse.classList.remove('hidden', 'idle-hidden');
         muse.classList.add('thinking');
         setCompanionMood('thinking');
-        showMuseSpeech(text || 'Thinking with AI...', 2500);
+        showMuseSpeech(text || 'Reasoning with AI...', 2500);
+        startTaskAutonomousRoaming();
         break;
 
       case 'WAITING_CONFIRMATION':
@@ -752,19 +829,23 @@
         break;
 
       case 'COMPLETED':
+        isOnActiveTask = false;
+        stopTaskAutonomousRoaming();
         muse.classList.remove('hidden', 'idle-hidden');
         muse.classList.add('happy', 'celebrating');
         setCompanionMood('happy');
-        showMuseSpeech(text || 'Task complete! ✨', 2000);
+        showMuseSpeech(text || 'Task complete! ✨', 2200);
         // After brief victory celebration, smoothly retreat and hide!
         setTimeout(() => {
           returnCompanionToRest();
-        }, 1400);
+        }, 1600);
         break;
 
       case 'IDLE':
       default:
         // Automatically hide from screen when idle
+        isOnActiveTask = false;
+        stopTaskAutonomousRoaming();
         returnCompanionToRest();
         break;
     }
@@ -784,6 +865,8 @@
         }
       }, 2000);
     } else {
+      isOnActiveTask = false;
+      stopTaskAutonomousRoaming();
       muse.classList.add('hidden', 'idle-hidden');
       clearInterval(ambientRoamTimer);
       if (museEl) museEl.style.transform = '';
