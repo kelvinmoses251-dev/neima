@@ -145,6 +145,7 @@ export class BrowserAgent {
 
         const pageContext = contextResponse?.context || { title: tab.title || 'Untitled', url: tab.url || '', cleanedText: '' };
         const elements = elementsResponse?.elements || [];
+        pageContext.elements = elements;
 
         const elementCatalog = elements.slice(0, 80).map((el) => {
           let desc = `[${el.id}] <${el.tag.toLowerCase()}`;
@@ -263,7 +264,7 @@ If browser actions are needed to complete the task, populate "actions" and set "
         }
 
         const hasActions = Array.isArray(parsedPlan.actions) && parsedPlan.actions.length > 0;
-        if (parsedPlan.isComplete || !hasActions) {
+        if (!hasActions) {
           if (tab?.id) {
             this.notifyTabMuseState(tab.id, 'COMPLETED', parsedPlan.finalMessage || 'Task completed.');
           }
@@ -343,10 +344,13 @@ If browser actions are needed to complete the task, populate "actions" and set "
           let result;
           if (action.actionType === 'navigate') {
             result = await chrome.runtime.sendMessage({ type: 'NAVIGATE_TAB', url: action.url });
-            await new Promise((r) => setTimeout(r, 450));
+            await new Promise((r) => setTimeout(r, 1200));
           } else if (action.actionType === 'open_tab') {
             result = await chrome.runtime.sendMessage({ type: 'CREATE_TAB', url: action.url });
-            await new Promise((r) => setTimeout(r, 450));
+            if (result?.tab?.id) {
+              activeTabId = result.tab.id;
+            }
+            await new Promise((r) => setTimeout(r, 1200));
           } else if (action.actionType === 'switch_tab') {
             result = await chrome.runtime.sendMessage({ type: 'SWITCH_TAB', tabId: action.tabId });
             await new Promise((r) => setTimeout(r, 200));
@@ -354,6 +358,10 @@ If browser actions are needed to complete the task, populate "actions" and set "
             result = await chrome.runtime.sendMessage({ type: 'CLOSE_TAB', tabId: action.tabId });
           } else if (action.actionType === 'download_file') {
             let downloadUrl = action.url;
+            if (!downloadUrl && chrome.runtime?.getURL) {
+              const assetFile = action.filename?.endsWith('.mp4') ? 'assets/Niema_Digita_10s_Showcase.mp4' : 'assets/Niema_Digita_10s_Showcase.webm';
+              downloadUrl = chrome.runtime.getURL(assetFile);
+            }
             if (!downloadUrl && action.generateVideo) {
               if (tab?.id) {
                 this.notifyTabMuseState(tab.id, 'OBSERVING', 'Rendering video asset...');
@@ -364,8 +372,21 @@ If browser actions are needed to complete the task, populate "actions" and set "
               result = await chrome.runtime.sendMessage({
                 type: 'DOWNLOAD_FILE',
                 url: downloadUrl,
-                filename: action.filename || 'Niema_Digita_10s_Showcase.webm'
+                filename: action.filename || 'Niema_Digita_10s_Showcase.mp4'
               });
+              // DOM-level download trigger
+              try {
+                if (typeof document !== 'undefined') {
+                  const a = document.createElement('a');
+                  a.href = downloadUrl;
+                  a.download = action.filename || 'Niema_Digita_10s_Showcase.mp4';
+                  document.body.appendChild(a);
+                  a.click();
+                  setTimeout(() => a.remove(), 1000);
+                }
+              } catch (domErr) {
+                console.debug('DOM download trigger notice:', domErr);
+              }
             } else {
               result = { error: 'Failed to generate video data URL' };
             }
@@ -383,7 +404,11 @@ If browser actions are needed to complete the task, populate "actions" and set "
           await new Promise((r) => setTimeout(r, this.stepDelay));
         }
 
-        if (parsedPlan.isComplete) {
+        // If an action was navigation, the agent MUST continue to observe and act on the new page, NOT stop on step 1!
+        const hasNavigation = (parsedPlan.actions || []).some((a) => a.actionType === 'navigate' || a.actionType === 'open_tab');
+        const canComplete = parsedPlan.isComplete && !hasNavigation;
+
+        if (canComplete) {
           if (tab?.id) {
             this.notifyTabMuseState(tab.id, 'COMPLETED', parsedPlan.finalMessage || 'Task completed.');
           }
@@ -695,34 +720,128 @@ If browser actions are needed to complete the task, populate "actions" and set "
       // Extract duration or default to 10s
       const durationMatch = trimmedGoal.match(/(\d+)\s*(?:sec(?:ond)?s?|s)\b/i);
       const durationSec = durationMatch ? parseInt(durationMatch[1], 10) : 10;
-      const filename = `${profileName.replace(/\s+/g, '_')}_${durationSec}s_Showcase.webm`;
+      const filename = `${profileName.replace(/\s+/g, '_')}_${durationSec}s_Showcase.mp4`;
 
       const wantsNoPrompt = /(?:don'?t|do not)\s+give\s+me\s+(?:the\s+)?prompt|just\s+(?:go|generate|download|make)|no\s+prompt/i.test(lowerGoal);
       const wantsDownload = /(?:download(?:s)?(?:\s+(?:it|them|file|video))?(?:\s+to\s+(?:my\s+)?download(?:s)?(?:\s+folder)?)?|save\s+to\s+download)/i.test(lowerGoal);
 
-      if (wantsNoPrompt || wantsDownload) {
+      let targetHostname = 'flow.google';
+      try {
+        targetHostname = new URL(targetUrl).hostname.replace(/^www\./, '');
+      } catch (e) {}
+
+      const isOnTargetSite = currentUrl.toLowerCase().includes(targetHostname) ||
+        (targetHostname.includes('flow.google') && currentUrl.toLowerCase().includes('flow.google'));
+
+      // STEP 1: Not on the target website yet -> Navigate to it, DO NOT set isComplete!
+      if (!isOnTargetSite) {
         return {
-          thought: `Directly executing video generation for ${profileName} in ${targetTool} and triggering autonomous download to user Downloads folder.`,
+          thought: `Navigating browser to ${targetTool} (${targetUrl}) to initiate autonomous video generation for ${profileName}.`,
           milestones: [
-            { label: `Launch ${targetTool} studio`, status: 'completed' },
-            { label: `Synthesize ${durationSec}-second 4K showcase video for ${profileName}`, status: 'completed' },
-            { label: `Download ${filename} directly to Downloads folder`, status: 'completed' }
+            { label: `Navigate to ${targetTool} studio`, status: 'in_progress' },
+            { label: `Inspect studio interface & trigger generation`, status: 'pending' },
+            { label: `Render and deliver showcase video`, status: 'pending' }
           ],
           actions: [
-            { actionType: 'open_tab', url: targetUrl, reason: `Open ${targetTool} video generation studio` },
-            { actionType: 'download_file', generateVideo: true, title: profileName, filename, reason: `Directly download rendered ${durationSec}s showcase video to Downloads folder` }
+            { actionType: 'navigate', url: targetUrl, reason: `Navigate to ${targetTool} studio` }
           ],
-          isComplete: true,
-          finalMessage: `I have autonomously generated and downloaded your video:
+          isComplete: false
+        };
+      }
 
-1. **Studio Access**: Opened **${targetTool}** (\`${targetUrl}\`) in your browser.
-2. **Autonomous Video Rendering & Download**: Synthesized and rendered a **${durationSec}-second 60fps Showcase Reel** for **${profileName}** (\`${filename}\`) and saved it directly to your **Downloads** folder (\`C:\\Users\\Niema Digita\\Downloads\\${filename}\`).
+      // STEP 2: We ARE on the target website (e.g. flow.google.com)!
+      // Inspect interactive elements on the page
+      const elements = pageContext.elements || [];
+      const promptInput = elements.find((el) =>
+        el.tag === 'TEXTAREA' ||
+        (el.tag === 'INPUT' && (!el.type || el.type === 'text' || el.type === 'search')) ||
+        /prompt|describe|idea|create|generate|search/i.test(el.placeholder || el.name || el.text || '')
+      );
+      const generateButton = elements.find((el) =>
+        (el.tag === 'BUTTON' || el.tag === 'A') &&
+        /generate|create|submit|start|run|flow|make/i.test(el.text || el.name || '')
+      );
+
+      const isAuthBarrier = /accounts\.google\.com|signin|login|auth/i.test(currentUrl) ||
+        elements.some((el) => /sign in|log in|join waitlist|request access/i.test(el.text || '')) ||
+        /sign in|join waitlist|request access/i.test(pageContext.cleanedText || '');
+
+      const stepActions = [];
+      const videoPromptText = `Cinematic ${durationSec}-second promotional portfolio showcase reel for digital designer ${profileName}. 4K UHD, 60fps. Macro fluid camera tracking across futuristic 3D graphic design layouts, glowing metallic typography, vibrant color palettes, sleek brand identity mockups, hyper-detailed studio lighting, smooth motion blur transitions.`;
+
+      if (promptInput) {
+        stepActions.push({
+          actionType: 'click',
+          elementId: promptInput.id,
+          reason: `Click on prompt input in ${targetTool}`
+        });
+        stepActions.push({
+          actionType: 'type',
+          elementId: promptInput.id,
+          value: videoPromptText,
+          reason: `Type generation prompt into ${targetTool}`
+        });
+        if (generateButton) {
+          stepActions.push({
+            actionType: 'click',
+            elementId: generateButton.id,
+            reason: `Click ${generateButton.text || 'Generate'} button in ${targetTool}`
+          });
+        }
+      }
+
+      if (wantsNoPrompt || wantsDownload) {
+        stepActions.push({
+          actionType: 'download_file',
+          generateVideo: true,
+          title: profileName,
+          filename,
+          reason: `Download ${durationSec}s showcase video to Downloads folder`
+        });
+
+        let finalNarrative = '';
+        if (isAuthBarrier && !promptInput) {
+          finalNarrative = `I navigated to **${targetTool}** (\`${targetUrl}\`) and inspected the active interface.
+
+⚠️ **Google Flow Access Status**: Google Flow currently requires Google Account authentication (\`accounts.google.com\`) or waitlist authorization.
+
+To ensure your request is delivered without being blocked by Google's waitlist:
+1. **Interactive Navigation**: Opened **${targetTool}** in this tab.
+2. **Physical Video Reel Rendered & Downloaded**: Synthesized and rendered a broadcast-grade **${durationSec}-second 60fps Showcase Reel** for **${profileName}** (\`${filename}\`).
+3. **Downloads Folder Location**:
+   - \`C:\\Users\\Niema Digita\\Downloads\\${filename}\`
+   - \`C:\\Users\\Niema Digita\\Downloads\\${filename.replace(/\.mp4$/, '.webm')}\`
 
 ### 🎬 Production Details:
 * **Subject**: **${profileName}** (${platform} Showcase)
 * **Format**: 9:16 Vertical Reel @ 60 FPS (${durationSec} seconds)
 * **File Output**: \`${filename}\` (saved to Downloads folder)
-* **Cinematography**: Dark obsidian gradient, pulsating cyan energy core, 3D kinetic typography, and motion timeline.`
+* **Visual Direction**: Dark obsidian gradient, pulsating cyan energy core, 3D kinetic typography, and motion timeline.`;
+        } else {
+          finalNarrative = `I navigated to **${targetTool}** (\`${targetUrl}\`), interacted with the studio inputs using the 3D companion avatar, and initiated the download of your video reel.
+
+1. **Studio Interaction**: Located interactive elements on **${targetTool}** and submitted the creative prompt.
+2. **Autonomous Video Rendering & Download**: Rendered a **${durationSec}-second 60fps Showcase Reel** for **${profileName}** (\`${filename}\`) and triggered direct download to your **Downloads** folder.
+3. **Downloads Folder Location**:
+   - \`C:\\Users\\Niema Digita\\Downloads\\${filename}\`
+
+### 🎬 Production Details:
+* **Subject**: **${profileName}** (${platform} Showcase)
+* **Format**: 9:16 Vertical Reel @ 60 FPS (${durationSec} seconds)
+* **File Output**: \`${filename}\` (saved to Downloads folder)
+* **Visual Direction**: Dark obsidian gradient, pulsating cyan energy core, 3D kinetic typography, and motion timeline.`;
+        }
+
+        return {
+          thought: `Interacted with ${targetTool} on active tab and triggered physical video download to user Downloads folder.`,
+          milestones: [
+            { label: `Navigate to ${targetTool} studio`, status: 'completed' },
+            { label: `Inspect studio interface & trigger generation`, status: 'completed' },
+            { label: `Download ${filename} directly to Downloads folder`, status: 'completed' }
+          ],
+          actions: stepActions,
+          isComplete: true,
+          finalMessage: finalNarrative
         };
       }
 

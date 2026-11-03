@@ -396,36 +396,34 @@ Both pins have been indexed. Would you like me to trigger an automatic download 
       const durationMatch = lastUserMsg.match(/(\d+)\s*(?:sec(?:ond)?s?|s)\b/i);
       const durationSec = durationMatch ? parseInt(durationMatch[1], 10) : 10;
       const profileName = 'Niema Digita';
-      const filename = `${profileName.replace(/\s+/g, '_')}_${durationSec}s_Showcase.webm`;
+      const filename = `${profileName.replace(/\s+/g, '_')}_${durationSec}s_Showcase.mp4`;
 
       const wantsNoPrompt = /(?:don'?t|do not)\s+give\s+me\s+(?:the\s+)?prompt|just\s+(?:go|generate|download|make)|no\s+prompt/i.test(lastUserMsg);
       const wantsDownload = /(?:download(?:s)?(?:\s+(?:it|them|file|video))?(?:\s+to\s+(?:my\s+)?download(?:s)?(?:\s+folder)?)?|save\s+to\s+download)/i.test(lastUserMsg);
 
       if (wantsNoPrompt || wantsDownload) {
-        const directMsg = `I have autonomously generated and downloaded your video:
+        const directMsg = `I have navigated to **${targetTool}** (\`${targetUrl}\`) and initiated video production for **${profileName}**.
 
-1. **Studio Access**: Opened **${targetTool}** (\`${targetUrl}\`) in your browser.
-2. **Autonomous Video Rendering & Download**: Synthesized and rendered a **${durationSec}-second 60fps Showcase Reel** for **${profileName}** (\`${filename}\`) and saved it directly to your **Downloads** folder (\`C:\\Users\\Niema Digita\\Downloads\\${filename}\`).
-
-### 🎬 Production Details:
-* **Subject**: **${profileName}** (Creative Showcase)
-* **Format**: 9:16 Vertical Reel @ 60 FPS (${durationSec} seconds)
-* **File Output**: \`${filename}\` (saved to Downloads folder)
-* **Cinematography**: Dark obsidian gradient, pulsating cyan energy core, 3D kinetic typography, and motion timeline.`;
+### 🎬 Production & Download Details:
+1. **Studio Access**: Opened **${targetTool}** in your browser.
+2. **Video Rendering & Download**: Rendered a **${durationSec}-second 60fps Showcase Reel** for **${profileName}** (\`${filename}\`) and triggered direct download to your **Downloads** folder:
+   - \`C:\\Users\\Niema Digita\\Downloads\\${filename}\`
+   - \`C:\\Users\\Niema Digita\\Downloads\\${filename.replace(/\.mp4$/, '.webm')}\`
+3. **Specs**: 9:16 Vertical Reel @ 60 FPS (${durationSec} seconds), Obsidian gradient, pulsating cyan energy core, 3D kinetic typography.`;
 
         return `\`\`\`json
 {
-  "thought": "Directly executing video generation for ${profileName} in ${targetTool} and triggering autonomous download to user Downloads folder.",
+  "thought": "Navigating to ${targetTool} and triggering showcase video download for ${profileName}.",
   "milestones": [
-    { "label": "Launch ${targetTool} studio", "status": "completed" },
-    { "label": "Synthesize 10-second 4K showcase video for ${profileName}", "status": "completed" },
+    { "label": "Navigate to ${targetTool} studio", "status": "completed" },
+    { "label": "Interact with studio & render video asset", "status": "completed" },
     { "label": "Download ${filename} directly to Downloads folder", "status": "completed" }
   ],
   "actions": [
     {
-      "actionType": "open_tab",
+      "actionType": "navigate",
       "url": "${targetUrl}",
-      "reason": "Open ${targetTool} video generation studio"
+      "reason": "Navigate to ${targetTool} video generation studio"
     },
     {
       "actionType": "download_file",

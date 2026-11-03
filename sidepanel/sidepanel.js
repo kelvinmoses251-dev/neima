@@ -937,6 +937,18 @@ function handleAgentStepUpdate(update) {
       break;
     }
 
+    case 'action_executed': {
+      const existingPill = feed.querySelector('.claude-activity-step');
+      if (existingPill && update.action) {
+        const textEl = existingPill.querySelector('.claude-activity-text');
+        if (textEl) {
+          const actionName = update.action.actionType || 'action';
+          textEl.innerText = `Finished: ${update.action.reason || actionName}`;
+        }
+      }
+      break;
+    }
+
     case 'completed': {
       // Cleanly clear activity steps and milestone trays so the final Claude narrative takes center stage
       feed.querySelectorAll('.claude-activity-step').forEach((el) => el.remove());
